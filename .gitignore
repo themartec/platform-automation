@@ -1,0 +1,5 @@
+/api-test/allure_results/
+.DS_Store
+../.idea/
+../.DS_Store
+__pycache__/
