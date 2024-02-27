@@ -6,4 +6,4 @@ __pycache__/
 tests/__pycache__/
 .idea/
 /api-test/src/__pycache__/
-
+/api-test/tests/__pycache__/

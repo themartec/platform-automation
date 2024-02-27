@@ -3,7 +3,7 @@ import logging
 import pytest
 import allure
 from dotenv import load_dotenv
-from src.studio import Studio
+from src.brand_kit_tab import BrandKitTab
 
 cwd = os.getcwd()
 
@@ -30,22 +30,35 @@ def reset_state_brand_kit_tab(request) -> str:
     load_dotenv()
     base_url = match_env(os.getenv('TEST_ENV'))
 
-    Studio(base_url).remove_logo_brand_kit_tab()
+    BrandKitTab(base_url).remove_logo_brand_kit_tab()
 
     def finalizer():
         print("\nPerforming teardown...")
-        Studio(base_url).remove_logo_brand_kit_tab()
+        BrandKitTab(base_url).remove_logo_brand_kit_tab()
 
     request.addfinalizer(finalizer)
 
     return base_url
 
 
-@allure.title("Studio - Upload Logo From Brand Kit Tab")
+@allure.title("[C2505] Brand Kit - Logo (JPEG) can be loaded successfully for admin")
 @allure.description("Logo upload as format JPEG")
-def test_brand_kit_upload_for_logo(reset_state_brand_kit_tab):
+def test_brand_kit_upload_for_logo_jpeg(reset_state_brand_kit_tab):
     file_list_dir = [f"{cwd}/test_data/logo_auto.jpeg"]
-    response = Studio(reset_state_brand_kit_tab).upload_logo_brand_kit_tab(file_list_dir)
+    response = BrandKitTab(reset_state_brand_kit_tab).upload_logo_brand_kit_tab(file_list_dir)
+    json_data = response.json()
+    logger.info(f" - response as text:\n{response.text}")
+    assert response.status_code == 200  # Validation of status code
+    assert len(json_data) > 0
+    assert json_data["message"] == "Add Logo for Brand Kit successfully"
+    assert len(json_data["data"]) == 1
+
+
+@allure.title("[C2517] Brand Kit - Logo (PNG) can be loaded successfully for all admin")
+@allure.description("Logo upload as format PNG")
+def test_brand_kit_upload_for_logo_png(reset_state_brand_kit_tab):
+    file_list_dir = [f"{cwd}/test_data/sample_image_4k_01.png"]
+    response = BrandKitTab(reset_state_brand_kit_tab).upload_logo_brand_kit_tab(file_list_dir)
     json_data = response.json()
     logger.info(f" - response as text:\n{response.text}")
     assert response.status_code == 200  # Validation of status code
