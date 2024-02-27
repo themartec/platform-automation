@@ -1,11 +1,4 @@
-import os
-import time
-
 import pytest
-from dotenv import load_dotenv
-from playwright.sync_api import Playwright, sync_playwright, expect
-
-from src.brand_kit import BrandKit
 
 
 def match_env(test_env: str):

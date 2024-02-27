@@ -1,29 +1,17 @@
 import json
-
 import requests
-
-bear_token_dev = (
-    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFIVnZibWN1ZEhKcGJtaEFkR2hsYldGeWRHVmpMbU52YlE9PSIsImF1dGhfaWQiOiJhMTQ2OWI2Mi0wM2E0LTRhZTktYWIyMi01Zjc3MjEwY2ZjYjYiLCJjb21wYW55X2lkIjoiY2E0OTg5NzQtMWFmZC00N2M0LWJiNTgtODE4NTlkYzY1YTM2IiwiY29tcGFueV9uYW1lIjoidGhlIE1hcnRlYyIsImF1ZCI6IkJyb3dzZXIiLCJwbGF0Zm9ybSI6IkVNUExPWUVSIiwic2VydmljZSI6IlNUVURJTyIsImlhdCI6MTcwOTAwMTI3NywiZXhwIjoxNzA5MDg3Njc3fQ.lwI4EYuHRAIS-subyg8OU8dK6PgxaX6NC6K1fR0AB9o')
-
-bear_token_stg = (
-    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFIVnZibWN1ZEhKcGJtaEFkR2hsYldGeWRHVmpMbU52YlE9PSIsImF1dGhfaWQiOiIzZDc3M2E2Ni02ZjM2LTRlN2ItYjAxNi1kZjZmMjNiYzBjN2UiLCJjb21wYW55X2lkIjoiYzJiZWExZDktNDhmYS00YTQ1LThkMDgtM2NjNDAwNGU3ODY0IiwiY29tcGFueV9uYW1lIjoiVGhlIE1hcnRlYyIsImF1ZCI6IkJyb3dzZXIiLCJwbGF0Zm9ybSI6IkVNUExPWUVSIiwic2VydmljZSI6IlNUVURJTyIsImlhdCI6MTcwODkyMDMyOCwiZXhwIjoxNzA5MDA2NzI4fQ.VA5joPkLNY1nvqf3eu77by_4E7D90nSDjgPwatu-Pxc')
+from common.secret import MartecSecret
 
 
 def get_header(url):
-    if "staging" in url:
-        headers = {'Authorization': bear_token_stg}
-    elif "dev" in url:
-        headers = {'Authorization': bear_token_dev}
-    else:
-        headers = ""
-    return headers
+    return MartecSecret(url).get_martec_header()
 
 
 def get_header_custom(url):
     if "staging" in url:
-        headers = {'Authorization': bear_token_stg, 'Content-Type': 'application/json'}
+        headers = {'Authorization': MartecSecret(url).get_martec_token(), 'Content-Type': 'application/json'}
     elif "dev" in url:
-        headers = {'Authorization': bear_token_dev, 'Content-Type': 'application/json'}
+        headers = {'Authorization': MartecSecret(url).get_martec_token(), 'Content-Type': 'application/json'}
     else:
         headers = ""
     return headers
@@ -93,7 +81,7 @@ def post_as_all_for_video(url, file_list_dir):
     return response
 
 
-class MartecAPIRequest:
+class MartecBrandKitAPIRequest:
 
     def __init__(self, base_url):
         self.base_url = base_url

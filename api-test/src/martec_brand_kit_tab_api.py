@@ -1,10 +1,10 @@
 import json
-
+from common.secret import MartecSecret
 import requests
 
-bear_token_brand_kit = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFIVnZibWN1ZEhKcGJtaEFkR2hsYldGeWRHVmpMbU52YlE9PSIsImF1dGhfaWQiOiIzZDc3M2E2Ni02ZjM2LTRlN2ItYjAxNi1kZjZmMjNiYzBjN2UiLCJjb21wYW55X2lkIjoiYzJiZWExZDktNDhmYS00YTQ1LThkMDgtM2NjNDAwNGU3ODY0IiwiY29tcGFueV9uYW1lIjoiVGhlIE1hcnRlYyIsImF1ZCI6IkJyb3dzZXIiLCJjcmVhdGVkX2F0IjoiMjAyNC0wMi0xOVQxMzo1MToyMS42MjdaIiwicGxhdGZvcm0iOiJFTVBMT1lFUiIsImlhdCI6MTcwODkyMDMyMSwiZXhwIjoxNzA5MDA2NzIxfQ.rt_0BSxKWaMiuLAsyXOKAu7YeaXSejESGlNS0uMcVXQ'
 
-headers_brand_kit = {'Authorization': bear_token_brand_kit}
+def get_header(url):
+    return {'Authorization': MartecSecret(url).get_token_for_brand_kit_tab_api()}
 
 
 def post_as_logo_brand_kit(url, file_list_dir):
@@ -13,19 +13,19 @@ def post_as_logo_brand_kit(url, file_list_dir):
     for file in file_list_dir:
         files.append(('logos', (file, open(file, 'rb'), f'image/{file.split(".")[-1]}')))
 
-    response = requests.request("POST", url, headers=headers_brand_kit, data=payload, files=files)
+    response = requests.request("POST", url, headers=get_header(url), data=payload, files=files)
     print(f"[API Response] status_code={response.status_code}, text: {response.text}")
     return response
 
 
-class MartecAPIRequest_BrandKitTab:
+class MartecAPIRequestFromBrandKitTab:
 
     def __init__(self, base_url):
         self.base_url = base_url
 
     def remove_logo(self):
         print(f"    - put: {self.base_url}")
-        headers_rem = {'Authorization': bear_token_brand_kit, 'Content-Type': 'application/json'}
+        headers_rem = {'Authorization': MartecSecret(self.base_url).get_token_for_brand_kit_tab_api(), 'Content-Type': 'application/json'}
         payload = json.dumps({"logos": [],
                               "fonts": [],
                               "colors": []})
