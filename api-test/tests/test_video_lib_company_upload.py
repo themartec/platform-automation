@@ -91,7 +91,7 @@ def test_upload_for_multiple_logos(reset_state):
     assert len(data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2521] Upload Company Brand - Video upload for single [HD, < 100MB, mp4] video")
+@allure.title("[C2521] Upload Company Brand - Video upload for single [HD, < 100MB, mp4] media")
 @allure.description("Video with format MP4, 45.89 MB")
 def test_upload_for_single_video(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_01.mp4"]
@@ -152,7 +152,7 @@ def test_upload_for_multiple_musics(reset_state):
     assert len(json_data["data"]["musics"]) == len(file_list_dir)
 
 
-@allure.title("[C2525] Upload Company Brand - Video upload for single [4K, 38MB, mp4] video")
+@allure.title("[C2525] Upload Company Brand - Video upload for single [4K, 38MB, mp4] media")
 @allure.description("Video with format MP4, 38MB, 4K")
 def test_upload_for_single_video(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_4k_video_less100MB_03.mp4"]
@@ -167,7 +167,7 @@ def test_upload_for_single_video(reset_state):
     assert len(json_data["data"]["videos"]) == len(file_list_dir)
 
 
-@allure.title("[C2526] Upload Company Brand - All upload for single [HD, 17MB, mp4] video")
+@allure.title("[C2526] Upload Company Brand - All upload for single [HD, 17MB, mp4] media")
 @allure.description("Single Video Upload")
 def test_upload_for_all_video(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_hd_17MB.mp4"

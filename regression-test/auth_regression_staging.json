@@ -1,0 +1,53 @@
+{
+  "cookies": [
+    {
+      "name": "__cf_bm",
+      "value": "f1d6L_k8qaZs9u3XtmyHj1SMiT8SJw..5bpwm6ePjck-1709091918-1.0-AQ4NLzE4SIQd+tR+zhO8X5xDC7K/qT7Nz5It8sPAxj8RDeK/uRhck47tf1NMrPWu/84C9ckAwTfCvHgIVSsAJrM=",
+      "domain": ".pexels.com",
+      "path": "/",
+      "expires": 1709093717.972213,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://appstaging.themartec.com",
+      "localStorage": [
+        {
+          "name": "hideDownloadAppNotice",
+          "value": ""
+        },
+        {
+          "name": "_pendo_visitorId.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1717731911587,\"value\":\"huong.trinh@themartec.com\"}"
+        },
+        {
+          "name": "_pendo_accountId.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1717731911587,\"value\":\"The Martec\"}"
+        },
+        {
+          "name": "persist:root",
+          "value": "{\"auth\":\"{\\\"token\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFIVnZibWN1ZEhKcGJtaEFkR2hsYldGeWRHVmpMbU52YlE9PSIsImF1dGhfaWQiOiIzZDc3M2E2Ni02ZjM2LTRlN2ItYjAxNi1kZjZmMjNiYzBjN2UiLCJjb21wYW55X2lkIjoiYzJiZWExZDktNDhmYS00YTQ1LThkMDgtM2NjNDAwNGU3ODY0IiwiY29tcGFueV9uYW1lIjoiVGhlIE1hcnRlYyIsImF1ZCI6IkJyb3dzZXIiLCJjcmVhdGVkX2F0IjoiMjAyNC0wMi0xOVQxMzo1MToyMS42MjdaIiwicGxhdGZvcm0iOiJFTVBMT1lFUiIsImlhdCI6MTcwOTA5MTkxMCwiZXhwIjoxNzA5MTc4MzEwfQ.kkwJT5OyxgeQ12anaKUqjxcVS9Wvq98AiFov63aA6fU\\\",\\\"platform\\\":\\\"EMPLOYER\\\",\\\"refresh_token\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imh1b25nLnRyaW5oQHRoZW1hcnRlYy5jb20iLCJjcmVhdGVkX2F0IjoiMjAyNC0wMi0xOVQxMzo1MToyMS42MjdaIiwicGxhdGZvcm0iOiJFTVBMT1lFUiIsImNvbXBhbnlfaWQiOiJjMmJlYTFkOS00OGZhLTRhNDUtOGQwOC0zY2M0MDA0ZTc4NjQiLCJpYXQiOjE3MDkwOTE5MTAsImV4cCI6MTcxMTY4MzkxMH0.nR8Wfl1YOGbcn6M8yfMM2xi0SxpZ1ChZTTh9KvQDnog\\\",\\\"system_message\\\":\\\"\\\",\\\"permissionRouter\\\":[\\\"employer/notifications\\\",\\\"employer/content-recipe\\\",\\\"employer/dashboard\\\",\\\"employer/content-calendar\\\",\\\"employer/inside-look\\\",\\\"employer/purchase\\\",\\\"employer/audience-research\\\",\\\"employer/employee-hub\\\",\\\"employer/story-builder\\\",\\\"employer/creative-studio\\\",\\\"employer/story-editor\\\",\\\"employer/showcase\\\",\\\"employer/library\\\",\\\"employer/analytics\\\",\\\"employer/brand-guidelines\\\",\\\"employer/widget\\\",\\\"employer/jobs\\\",\\\"employer/settings\\\",\\\"employer/register\\\",\\\"employer/forgot-password\\\",\\\"employer/login\\\",\\\"employer/sso\\\"],\\\"email\\\":\\\"huong.trinh@themartec.com\\\"}\",\"pageName\":\"{\\\"page_name\\\":null}\",\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}"
+        },
+        {
+          "name": "_pendo_previous_page_loads.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1709091923543,\"value\":\"[{\\\"url\\\":\\\"https://appstaging.themartec.com/employer/content-recipe\\\",\\\"browser_time\\\":1709091911590},{\\\"url\\\":\\\"https://appstaging.themartec.com/employer/dashboard\\\",\\\"browser_time\\\":1709091916542}]\"}"
+        },
+        {
+          "name": "_pendo_meta.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1717731911589,\"value\":319143440}"
+        },
+        {
+          "name": "i18nextLng",
+          "value": "en"
+        },
+        {
+          "name": "_pendo_guides_blocked.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1709106312680,\"value\":\"0\"}"
+        }
+      ]
+    }
+  ]
+}

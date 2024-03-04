@@ -1,5 +1,5 @@
 import requests
-from common.secret import MartecSecret
+from common_src.secret import MartecSecret
 
 
 def get_header(url):

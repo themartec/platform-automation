@@ -7,3 +7,5 @@ tests/__pycache__/
 .idea/
 /api-test/src/__pycache__/
 /api-test/tests/__pycache__/
+/regression-test/allure_results/
+../api-test/src/__pycache__/

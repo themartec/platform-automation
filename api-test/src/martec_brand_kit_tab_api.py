@@ -1,5 +1,5 @@
 import json
-from common.secret import MartecSecret
+from common_src.secret import MartecSecret
 import requests
 
 

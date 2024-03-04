@@ -78,11 +78,11 @@ def test_upload_for_multiple_images(reset_state):
     assert len(data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2509] Upload Personal Media - Video upload for single [4K, < 100MB, mp4] video")
+@allure.title("[C2509] Upload Personal Media - Video upload for single [4K, < 100MB, mp4] media")
 @allure.description("Video with format MP4,4K,40MB")
 def test_upload_for_single_video(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_4k_video_less100MB_03.mp4"]
-    media_list_type = ["video/mp4"]
+    media_list_type = ["media/mp4"]
     response = MartecMediaAPIRequest(reset_state).post_media(file_list_dir, media_list_type)
     json_data = response.json()
     logger.info(f" - response as text:\n{response.text}")
@@ -94,11 +94,11 @@ def test_upload_for_single_video(reset_state):
     assert len(json_data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2510] Upload Personal Media - Video upload for single [HD, > 100MB, mp4] video")
+@allure.title("[C2510] Upload Personal Media - Video upload for single [HD, > 100MB, mp4] media")
 @allure.description("Video with format MP4,HD,132MB")
 def test_upload_for_single_video_100MB(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_hd_video_gr100MB.mp4"]
-    media_list_type = ["video/mp4"]
+    media_list_type = ["media/mp4"]
     response = MartecMediaAPIRequest(reset_state).post_media(file_list_dir, media_list_type)
     json_data = response.json()
     logger.info(f" - response as text:\n{response.text}")
@@ -110,11 +110,11 @@ def test_upload_for_single_video_100MB(reset_state):
     assert len(json_data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2511] Upload Personal Media - Video upload for single [HD, 17MB, mp4] video")
+@allure.title("[C2511] Upload Personal Media - Video upload for single [HD, 17MB, mp4] media")
 @allure.description("Video with format MP4, HD, 17MB")
 def test_upload_for_single_video_17MB(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_hd_17MB.mp4"]
-    media_list_type = ["video/mp4"]
+    media_list_type = ["media/mp4"]
     response = MartecMediaAPIRequest(reset_state).post_media(file_list_dir, media_list_type)
     json_data = response.json()
     logger.info(f" - response as text:\n{response.text}")
@@ -131,7 +131,7 @@ def test_upload_for_single_video_17MB(reset_state):
 def test_upload_for_multiple_videos(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_01.mp4",
                      f"{cwd}/test_data/sample_video_02.mov"]
-    media_list_type = ["video/mp4", "video/mov"]
+    media_list_type = ["media/mp4", "media/mov"]
     response = MartecMediaAPIRequest(reset_state).post_media(file_list_dir, media_list_type)
     json_data = response.json()
     logger.info(f" - response as text:\n{response.text}")
@@ -175,11 +175,11 @@ def test_upload_for_multiple_musics(reset_state):
     assert len(json_data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2515] Upload Personal Media - All upload for single [HD, 48MB, mp4] video ")
+@allure.title("[C2515] Upload Personal Media - All upload for single [HD, 48MB, mp4] media ")
 @allure.description("Single Video Upload")
 def test_upload_for_all_videos(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_01.mp4"]
-    media_list_type = ["video/mp4"]
+    media_list_type = ["media/mp4"]
     response = MartecMediaAPIRequest(reset_state).post_media(file_list_dir, media_list_type)
     json_data = response.json()
     logger.info(f" - response as text:\n{response.text}")
@@ -189,14 +189,14 @@ def test_upload_for_all_videos(reset_state):
     assert len(json_data["data"]) == 1
 
 
-@allure.title("[C2516] Upload Personal Media - All upload for mixed medias (music, image & video)")
+@allure.title("[C2516] Upload Personal Media - All upload for mixed medias (music, image & media)")
 @allure.description("Mixed Music, Image & Video with format [mp3, JPEG, mp4]")
 def test_upload_for_all_mixed_media(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_music_01.mp3",
                      f"{cwd}/test_data/logo_auto.jpeg",
                      f"{cwd}/test_data/sample_video_hd_17MB.mp4",
                      ]
-    media_list_type = ["audio/mp3", "image/jpeg", "video/mp4"]
+    media_list_type = ["audio/mp3", "image/jpeg", "media/mp4"]
     response = MartecMediaAPIRequest(reset_state).post_media(file_list_dir, media_list_type)
     json_data = response.json()
     logger.info(f" - response as text:\n{response.text}")
