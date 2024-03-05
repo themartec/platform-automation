@@ -69,20 +69,23 @@ class CreativeStudioPage:
         time.sleep(3)
         self.page.locator("//div[@class='plus-dashed']/following-sibling::div[contains(@class,"
                           "'container-xs')]").hover()
-        self.page.locator("(//div[contains(@class,'close-bock-icon')])[2]").click()
-
+        close_ele = self.page.locator("(//div[contains(@class,'close-bock-icon')])[2]")
+        if close_ele.count() > 1:
+            self.page.locator("(//div[contains(@class,'close-bock-icon')])[2]").click()
+        else:
+            self.page.locator("(//div[contains(@class,'close-bock-icon')])").click()
     # Stories tab -------------------------------------------------------------------
     def click_on_stories_tab(self):
         self.page.get_by_text("Stories").click()
 
-    def check_video_is_displayed_in_stories_tab(self, asset_id, file_name):
+    def check_video_is_displayed_in_stories_tab(self, media_url):
         xpath = (f"//div[contains(@class,'asset-upload')]//video["
-                 f"@src='{MEDIA_URL}/{asset_id}/{file_name}']")
+                 f"@src='{media_url}']")
         expect(self.page.locator(xpath)).to_be_visible()
 
-    def check_video_is_displayed_in_preview(self, asset_id, file_name):
+    def check_video_is_displayed_in_preview(self, media_url):
         xpath = (f"//div[contains(@class,'video-react-controls')]//video["
-                 f"@src='{MEDIA_URL}/{asset_id}/{file_name}']")
+                 f"@src='{media_url}']")
         expect(self.page.locator(xpath)).to_be_visible()
 
     def check_video_is_displayed_in_timeline(self):

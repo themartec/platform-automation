@@ -47,12 +47,12 @@ def get_env_from_command(request):
 
 
 @pytest.fixture(scope="function")
-def get_env_id(request) -> None:
+def get_env_id(request) -> str:
     test_env_id = get_env_from_command(request)
     return test_env_id
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def set_up_tear_down(playwright: Playwright, request) -> None:
     test_env_id = get_env_from_command(request)
     print("Set up is called !")
@@ -80,7 +80,7 @@ def set_up_tear_down(playwright: Playwright, request) -> None:
     request.addfinalizer(teardown)
 
 
-@pytest.fixture(scope="package")
+@pytest.fixture(scope="function")
 def set_up_tear_down_without_state(playwright: Playwright, request) -> None:
     test_env_id = get_env_from_command(request)
     print("Set up is called !")
@@ -97,7 +97,7 @@ def set_up_tear_down_without_state(playwright: Playwright, request) -> None:
 
     def teardown():
         print("Tear down is called !")
-        # browser.close()
+        browser.close()
 
     request.addfinalizer(teardown)
 
@@ -139,4 +139,13 @@ def remove_and_get_tested_download_files(request) -> str:
     return file_name
 
 
-
+@pytest.fixture(scope="function")
+def get_media_url(request) -> str:
+    test_env_id = get_env_from_command(request)
+    if test_env_id == "1":
+        base_media_url = os.getenv("BASE_MEDIA_URL_STG")
+    elif test_env_id == "2":
+        base_media_url = os.getenv("BASE_MEDIA_URL_DEV")
+    else:
+        base_media_url = ""
+    yield base_media_url

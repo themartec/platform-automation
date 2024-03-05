@@ -57,6 +57,7 @@ class MartecDatabase:
         return returned_id
 
     def remove_media_by_file_path(self, file_path: str):
+        print(f"[DB CONNECTION] Remove file_path: {file_path}")
         if file_path:
             query_str = f"DELETE FROM media WHERE filepath = '{file_path}'"
             do_query_without_fetch(self.conn, query_str)
@@ -77,8 +78,8 @@ class MartecDatabase:
     def remove_video_of_save_to_story(self, file_path: str):
         med_id = self.get_media_id(file_path)
         print(f"[DB Connection] Remove for media id {med_id}")
-        self.remove_media_by_file_path(file_path)
-        self.remove_media_history_by_id(med_id)
+        assert self.remove_media_by_file_path(file_path) is True
+        assert self.remove_media_history_by_id(med_id) is True
 
     def close(self):
         self.conn.close()

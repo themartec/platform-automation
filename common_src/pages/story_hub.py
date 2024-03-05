@@ -72,7 +72,7 @@ class StoryHubPage:
         expect(self.page.get_by_text(question)).to_be_visible()
 
     def check_studio_video_is_existed(self):
-        xpath = "//div[.='Studio Videos']/following-sibling::div//media"
+        xpath = "//div[.='Studio Videos']/following-sibling::div//video"
         list_elements = self.page.locator(xpath)
         media_link = []
         for i in range(list_elements.count()):
