@@ -44,9 +44,9 @@ def reset_state(request):
     return base_url
 
 
-@allure.title("[C2507] Upload Personal Media - Image upload for single [4K, 3.3MB, PNG] image ")
+@allure.title("[C2545] Upload Personal Media - Image upload for single [4K, 3.3MB, PNG] image ")
 @allure.description("Image with format 4K, 3.3MB, PNG")
-@allure.tag('C2507')
+@allure.tag('C2545')
 def test_upload_for_single_image(reset_state):
     response = MartecMediaAPIRequest(reset_state).post_media([f"{cwd}/test_data/sample_image_4k_01.png"], ['image/png'])
     data = response.json()
@@ -61,8 +61,9 @@ def test_upload_for_single_image(reset_state):
     assert int(img_obj["height"]) > 0
 
 
-@allure.title("[C2506] Upload Personal Media - Image upload for multiple mixed images format ")
+@allure.title("[C2544] Upload Personal Media - Image upload for multiple mixed images format ")
 @allure.description("Mixed Image with format [JPEG, HD, 212KB], [PNG, 4K, 3.3MB], [GIF, HD, 8.7MB]")
+@allure.tag("C2544")
 def test_upload_for_multiple_images(reset_state):
     file_list_dir = [f"{cwd}/test_data/screen_auto.jpeg",
                      f"{cwd}/test_data/sample_image_4k_01.png",
@@ -78,9 +79,10 @@ def test_upload_for_multiple_images(reset_state):
     assert len(data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2509] Upload Personal Media - Video upload for single [4K, < 100MB, mp4] media")
+@allure.title("[C2546] Upload Personal Media - Video upload for single [4K, < 100MB, mp4] video")
 @allure.description("Video with format MP4,4K,40MB")
-def test_upload_for_single_video(reset_state):
+@allure.tag("C2546")
+def test_upload_for_single_video_below_100MB(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_4k_video_less100MB_03.mp4"]
     media_list_type = ["media/mp4"]
     response = MartecMediaAPIRequest(reset_state).post_media(file_list_dir, media_list_type)
@@ -94,9 +96,10 @@ def test_upload_for_single_video(reset_state):
     assert len(json_data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2510] Upload Personal Media - Video upload for single [HD, > 100MB, mp4] media")
+@allure.title("[C2547] Upload Personal Media - Video upload for single [HD, > 100MB, mp4] video")
 @allure.description("Video with format MP4,HD,132MB")
-def test_upload_for_single_video_100MB(reset_state):
+@allure.tag("C2547")
+def test_upload_for_single_video_greater_than_100MB(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_hd_video_gr100MB.mp4"]
     media_list_type = ["media/mp4"]
     response = MartecMediaAPIRequest(reset_state).post_media(file_list_dir, media_list_type)
@@ -110,8 +113,9 @@ def test_upload_for_single_video_100MB(reset_state):
     assert len(json_data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2511] Upload Personal Media - Video upload for single [HD, 17MB, mp4] media")
+@allure.title("[C2548] Upload Personal Media - Video upload for single [HD, 17MB, mp4] video")
 @allure.description("Video with format MP4, HD, 17MB")
+@allure.tag("C2548")
 def test_upload_for_single_video_17MB(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_hd_17MB.mp4"]
     media_list_type = ["media/mp4"]
@@ -126,8 +130,9 @@ def test_upload_for_single_video_17MB(reset_state):
     assert len(json_data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2512] Upload Personal Media - Video upload for multiple mixed videos")
+@allure.title("[C2549] Upload Personal Media - Video upload for multiple mixed videos")
 @allure.description("Mixed Video with format [MOV, HD, 0.68MB], [MP4, HD, 45.89 MB]")
+@allure.tag("C2549")
 def test_upload_for_multiple_videos(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_01.mp4",
                      f"{cwd}/test_data/sample_video_02.mov"]
@@ -143,8 +148,9 @@ def test_upload_for_multiple_videos(reset_state):
     assert len(json_data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2513] Upload Personal Media - Music upload for single [mp3, 1.01MB] music")
+@allure.title("[C2550] Upload Personal Media - Music upload for single [mp3, 1.01MB] music")
 @allure.description("Music with format [mp3, 1.01MB]")
+@allure.tag("C2550")
 def test_upload_for_single_music(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_music_01.mp3"]
     media_list_type = ["audio/mp3"]
@@ -158,8 +164,9 @@ def test_upload_for_single_music(reset_state):
     assert len(json_data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2514] Upload Personal Media - Music upload for multiple mixed musics")
+@allure.title("[C2551] Upload Personal Media - Music upload for multiple mixed musics")
 @allure.description("Mixed Music with format [mp3, 1.01MB],[aac, 3.87MB]")
+@allure.tag("C2551")
 def test_upload_for_multiple_musics(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_music_01.mp3",
                      f"{cwd}/test_data/sample_aac_music_3.87mb.aac"]
@@ -175,8 +182,9 @@ def test_upload_for_multiple_musics(reset_state):
     assert len(json_data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2515] Upload Personal Media - All upload for single [HD, 48MB, mp4] media ")
+@allure.title("[C2552] Upload Personal Media - All upload for single [HD, 48MB, mp4] video")
 @allure.description("Single Video Upload")
+@allure.tag("C2552")
 def test_upload_for_all_videos(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_01.mp4"]
     media_list_type = ["media/mp4"]
@@ -189,8 +197,9 @@ def test_upload_for_all_videos(reset_state):
     assert len(json_data["data"]) == 1
 
 
-@allure.title("[C2516] Upload Personal Media - All upload for mixed medias (music, image & media)")
+@allure.title("[C2553] Upload Personal Media - All upload for mixed medias (music, image & video)")
 @allure.description("Mixed Music, Image & Video with format [mp3, JPEG, mp4]")
+@allure.tag("C2553")
 def test_upload_for_all_mixed_media(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_music_01.mp3",
                      f"{cwd}/test_data/logo_auto.jpeg",

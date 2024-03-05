@@ -41,8 +41,9 @@ def reset_state(request):
     return base_url
 
 
-@allure.title("[C2518] Upload Company Brand - Image upload for single [HD, 1.1MB, PNG] image")
+@allure.title("[C2554] Upload Company Brand - Image upload for single [HD, 1.1MB, PNG] image")
 @allure.description("Single image with format [HD, 1.1MB, PNG]")
+@allure.tag("C2554")
 def test_upload_for_SINGLE_image(reset_state):
     file_name = "shrimp_auto"
     file_list_dir = [f"{cwd}/test_data/{file_name}.png"]
@@ -62,8 +63,9 @@ def test_upload_for_SINGLE_image(reset_state):
     assert int(img_obj["height"]) > 0
 
 
-@allure.title("[C2519] Upload Company Brand - Image upload for multiple mixed image formats")
+@allure.title("[C2555] Upload Company Brand - Image upload for multiple mixed image formats")
 @allure.description("Mixed Image with format JPEG, PNG, GIF")
+@allure.tag("C2555")
 def test_upload_for_multiple_images(reset_state):
     file_list_dir = [f"{cwd}/test_data/screen_auto.jpeg",
                      f"{cwd}/test_data/shrimp_auto.png",
@@ -78,8 +80,9 @@ def test_upload_for_multiple_images(reset_state):
     assert len(data["data"]["images"]) == len(file_list_dir), "Validate uploading for one media only"
 
 
-@allure.title("[C2520] Upload Company Brand - Logo upload for multiple mixed logos")
+@allure.title("[C2556] Upload Company Brand - Logo upload for multiple mixed logos")
 @allure.description("Mixed Logos with format JPEG, PNG")
+@allure.tag("C2556")
 def test_upload_for_multiple_logos(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_logo_01.jpeg", f"{cwd}/test_data/sample_logo_02.png"]
     response = BrandKit(reset_state).upload_logos_list(file_list_dir)
@@ -91,8 +94,9 @@ def test_upload_for_multiple_logos(reset_state):
     assert len(data["data"]) == len(file_list_dir)
 
 
-@allure.title("[C2521] Upload Company Brand - Video upload for single [HD, < 100MB, mp4] media")
+@allure.title("[C2557] Upload Company Brand - Video upload for single [HD, < 100MB, mp4] video")
 @allure.description("Video with format MP4, 45.89 MB")
+@allure.tag("C2557")
 def test_upload_for_single_video(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_01.mp4"]
     response = BrandKit(reset_state).upload_video_list(file_list_dir)
@@ -106,8 +110,9 @@ def test_upload_for_single_video(reset_state):
     assert len(json_data["data"]["videos"]) == len(file_list_dir)
 
 
-@allure.title("[C2522] Upload Company Brand - Video upload for multiple mixed videos")
+@allure.title("[C2558] Upload Company Brand - Video upload for multiple mixed videos")
 @allure.description("Mixed Video with format [MOV, 0.68MB], [MP4, 45.89 MB]")
+@allure.tag("C2558")
 def test_upload_for_multiple_videos(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_01.mp4",
                      f"{cwd}/test_data/sample_video_02.mov"]
@@ -122,8 +127,9 @@ def test_upload_for_multiple_videos(reset_state):
     assert len(json_data["data"]["videos"]) == len(file_list_dir)
 
 
-@allure.title("[C2523] Upload Company Brand - Music upload for single [mp3, 5MB] music")
+@allure.title("[C2559] Upload Company Brand - Music upload for single [mp3, 5MB] music")
 @allure.description("Music with format [mp3, 5MB]")
+@allure.tag("C2559")
 def test_upload_for_single_music(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_music_02.mp3"]
     response = BrandKit(reset_state).upload_music_list(file_list_dir)
@@ -136,8 +142,9 @@ def test_upload_for_single_music(reset_state):
     assert len(json_data["data"]["musics"]) == len(file_list_dir)
 
 
-@allure.title("[C2524] Upload Company Brand - Music upload for multiple mixed musics")
+@allure.title("[C2560] Upload Company Brand - Music upload for multiple mixed musics")
 @allure.description("Mixed Music with format [mp3, 1.01MB, 5.07MB]")
+@allure.tag("C2560")
 def test_upload_for_multiple_musics(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_music_01.mp3",
                      f"{cwd}/test_data/sample_music_02.mp3"]
@@ -152,8 +159,9 @@ def test_upload_for_multiple_musics(reset_state):
     assert len(json_data["data"]["musics"]) == len(file_list_dir)
 
 
-@allure.title("[C2525] Upload Company Brand - Video upload for single [4K, 38MB, mp4] media")
+@allure.title("[C2561] Upload Company Brand - Video upload for single [4K, 38MB, mp4] video")
 @allure.description("Video with format MP4, 38MB, 4K")
+@allure.tag("C2561")
 def test_upload_for_single_video(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_4k_video_less100MB_03.mp4"]
     response = BrandKit(reset_state).upload_video_list(file_list_dir)
@@ -167,8 +175,9 @@ def test_upload_for_single_video(reset_state):
     assert len(json_data["data"]["videos"]) == len(file_list_dir)
 
 
-@allure.title("[C2526] Upload Company Brand - All upload for single [HD, 17MB, mp4] media")
+@allure.title("[C2562] Upload Company Brand - All upload for single [HD, 17MB, mp4] video")
 @allure.description("Single Video Upload")
+@allure.tag("C2562")
 def test_upload_for_all_video(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_video_hd_17MB.mp4"
                      ]
@@ -181,8 +190,9 @@ def test_upload_for_all_video(reset_state):
     assert len(json_data["data"]["videos"]) == 1
 
 
-@allure.title("[C2527] Upload Company Brand - All upload for mixed medias (music, image)")
+@allure.title("[C2563] Upload Company Brand - All upload for mixed medias (music, image)")
 @allure.description("Mixed Music & Image with format [mp3, JPEG]")
+@allure.tag("C2563")
 def test_upload_for_all_mixed_media(reset_state):
     file_list_dir = [f"{cwd}/test_data/sample_music_01.mp3",
                      f"{cwd}/test_data/logo_auto.jpeg"

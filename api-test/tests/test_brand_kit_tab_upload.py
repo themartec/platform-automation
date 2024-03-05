@@ -41,8 +41,9 @@ def reset_state_brand_kit_tab(request) -> str:
     return base_url
 
 
-@allure.title("[C2505] Brand Kit - Logo (JPEG) can be loaded successfully for admin")
+@allure.title("[C2542] Brand Kit - Logo (JPEG) can be loaded successfully for admin")
 @allure.description("Logo upload as format JPEG")
+@allure.tag("C2542")
 def test_brand_kit_upload_for_logo_jpeg(reset_state_brand_kit_tab):
     file_list_dir = [f"{cwd}/test_data/logo_auto.jpeg"]
     response = BrandKitTab(reset_state_brand_kit_tab).upload_logo_brand_kit_tab(file_list_dir)
@@ -54,8 +55,9 @@ def test_brand_kit_upload_for_logo_jpeg(reset_state_brand_kit_tab):
     assert len(json_data["data"]) == 1
 
 
-@allure.title("[C2517] Brand Kit - Logo (PNG) can be loaded successfully for all admin")
+@allure.title("[C2543] Brand Kit - Logo (PNG) can be loaded successfully for all admin")
 @allure.description("Logo upload as format PNG")
+@allure.tag("C2543")
 def test_brand_kit_upload_for_logo_png(reset_state_brand_kit_tab):
     file_list_dir = [f"{cwd}/test_data/sample_image_4k_01.png"]
     response = BrandKitTab(reset_state_brand_kit_tab).upload_logo_brand_kit_tab(file_list_dir)
