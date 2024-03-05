@@ -4,6 +4,8 @@ import time
 import cv2
 from playwright.sync_api import expect
 
+MEDIA_URL = "https://cdndev.themartec.com/videos"
+
 
 class CreativeStudioPage:
     def __init__(self, page):
@@ -68,6 +70,24 @@ class CreativeStudioPage:
         self.page.locator("//div[@class='plus-dashed']/following-sibling::div[contains(@class,"
                           "'container-xs')]").hover()
         self.page.locator("(//div[contains(@class,'close-bock-icon')])[2]").click()
+
+    # Stories tab -------------------------------------------------------------------
+    def click_on_stories_tab(self):
+        self.page.get_by_text("Stories").click()
+
+    def check_video_is_displayed_in_stories_tab(self, asset_id, file_name):
+        xpath = (f"//div[contains(@class,'asset-upload')]//video["
+                 f"@src='{MEDIA_URL}/{asset_id}/{file_name}']")
+        expect(self.page.locator(xpath)).to_be_visible()
+
+    def check_video_is_displayed_in_preview(self, asset_id, file_name):
+        xpath = (f"//div[contains(@class,'video-react-controls')]//video["
+                 f"@src='{MEDIA_URL}/{asset_id}/{file_name}']")
+        expect(self.page.locator(xpath)).to_be_visible()
+
+    def check_video_is_displayed_in_timeline(self):
+        xpath = f"//div[@id='control-frame-editing']//div[contains(@id,'thumbnail-box')]"
+        expect(self.page.locator(xpath)).to_be_visible()
 
     # -------------------------------------------------------------------
     def export_video_with_resolution(self, resolution_type):
@@ -136,10 +156,11 @@ class CreativeStudioPage:
     def click_on_Brand_tab(self):
         self.page.locator("div").filter(has_text=re.compile(r"^Brand$")).click()
 
-    def click_on_edit_template(self, image_dir):
+    def click_on_edit_template(self, image_dir, position):
+        # self.page.mouse.down()
         xpath = f"//p[.='Templates']/following-sibling::div[2]//div[@src='{image_dir}']"
         self.page.locator(xpath).hover()
-        self.page.locator(".pencil-wrapper > svg").click()
+        self.page.locator(f"(//div[contains(@class,'pencil-wrapper')])[{position}]").click()
 
     # Video Library ------------------------------------
     def access_video_library_tab(self):

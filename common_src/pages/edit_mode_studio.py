@@ -72,8 +72,16 @@ class EditModeStudioPage:
         xpath = "//div[contains(@id,'time-box') and @type='VIDEO']"
         expect(self.page.locator(xpath)).to_be_visible()
 
+    def check_timeline_has_image(self):
+        xpath = "//div[contains(@id,'time-box') and @type='IMAGE']"
+        expect(self.page.locator(xpath)).to_be_visible()
+
     def check_timeline_has_text_effects_as(self, text_type):
         expect(self.page.get_by_text(f"{text_type}")).to_be_visible()
 
     def check_timeline_has_card_as(self, card_name):
         expect(self.page.locator("#control-frame-editing").get_by_text(card_name)).to_be_visible()
+
+    def check_template_preview_panel_has_shown_with_media(self, file_url):
+        xpath = f"//div[contains(@class,'play-screen')]//img[@src='{file_url}']"
+        expect(self.page.locator(xpath)).to_be_visible()
