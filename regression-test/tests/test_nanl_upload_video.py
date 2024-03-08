@@ -65,9 +65,9 @@ network_conditions = {
         'latency': 3,
     },
     'Fast 3G Network Speed': {
-        'download': 180000,  # 400 Kbps
-        'upload': 84375,  # 400 Kbps
-        'latency': 150,  # 2s
+        'download': 180000,  # 1440 Kbps
+        'upload': 84375,  # 675 Kbps
+        'latency': 150,  # 150 ms
     }
 }
 
@@ -90,7 +90,7 @@ def init_network_config(context: BrowserContext, condition):
 @allure.title("[C2645] NANL - Upload Video In Multiple Configured Network")
 @allure.description(f"Ref: {network_ref}")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2645")
-# @pytest.mark.parametrize("network_condition", network_conditions.keys())
+@pytest.mark.parametrize("network_condition", network_conditions.keys())
 def test_nanl_upload_video_under_network_conditions(set_up_tear_down_with_network_profile,
                                                     get_base_url,
                                                     network_condition):
@@ -113,6 +113,6 @@ def test_nanl_upload_video_under_network_conditions(set_up_tear_down_with_networ
         no_app.click_on_start_button()
         no_app.click_on_next_button()
         upload_time = no_app.set_file_name_to_upload(file_name_dir)
-    with allure.step("Validate Uploaded Time Should Be Less Than 60 seconds"):
+    with allure.step("Validate Uploaded Time Should Be Less Than 120 seconds"):
         logger.info(f"Upload Time: {upload_time} (-1 means it took more than 2 minutes)")
-        assert upload_time < 61 & upload_time != -1
+        assert -1 < upload_time < 61
