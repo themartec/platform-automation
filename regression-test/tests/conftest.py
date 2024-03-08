@@ -4,7 +4,7 @@ import time
 
 import pytest
 from dotenv import load_dotenv
-from playwright.sync_api import Playwright
+from playwright.sync_api import Playwright, BrowserContext
 
 load_dotenv()
 
@@ -149,3 +149,21 @@ def get_media_url(request) -> str:
     else:
         base_media_url = ""
     yield base_media_url
+
+
+@pytest.fixture(scope="function")
+def set_up_tear_down_with_network_profile(playwright: Playwright, request) -> BrowserContext:
+    test_env_id = get_env_from_command(request)
+    print("Set up is called !")
+    url = match_env(test_env_id)
+    print(f"TEST ENV: {url}")
+    browser = playwright.chromium.launch(headless=False, slow_mo=500, channel="chrome")
+    context = browser.new_context()
+
+    yield context
+
+    def teardown():
+        print("Tear down is called !")
+        browser.close()
+
+    request.addfinalizer(teardown)

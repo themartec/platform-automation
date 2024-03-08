@@ -19,7 +19,7 @@ from common_src.pages.edit_mode_studio import EditModeStudioPage
 @allure.description("Typography (fonts) can be newly loaded in Brand Kit "
                     "and be syned into Text Effect/Font Style "
                     "in 'Text & Cards' tab of Studio Edit Mode for user to select successfully")
-@allure.tag("C2568")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2568")
 def test_load_typography(set_up_tear_down) -> None:
     page = set_up_tear_down
     font_style = "fontawesome-webfont"
@@ -62,7 +62,7 @@ def test_load_typography(set_up_tear_down) -> None:
 @allure.description("Color palette can be newly loaded in Brand Kit "
                     "and be syned into Text Effect/Colour & Background Colour"
                     "in 'Text & Cards' tab of Studio Edit Mode for user to select successfully")
-@allure.tag("C2569")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2569")
 def test_load_color(set_up_tear_down) -> None:
     page = set_up_tear_down
     color_code = "#0d256a"

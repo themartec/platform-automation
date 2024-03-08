@@ -47,7 +47,7 @@ def get_data_of_template_image_dir_company(env_id: str, media_url: str):
               "edit mode")
 @allure.description("Company/Brand template is shown on Studio tab and its assets are loaded completely in timeline "
                     "in Edit mode")
-@allure.tag("C2570")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2570")
 def test_studio_load_assets_company_template(set_up_tear_down_without_state, get_env_id, get_media_url) -> None:
     page = set_up_tear_down_without_state
 
@@ -91,7 +91,7 @@ def test_studio_load_assets_company_template(set_up_tear_down_without_state, get
 @allure.title("[C2640] Load assets - Template Personal can be loaded successfully with fully contents in "
               "edit mode")
 @allure.description("Personal template is shown on Studio tab and its assets are loaded completely in timeline")
-@allure.tag("C2640")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2640")
 def test_studio_load_assets_personal_template(set_up_tear_down_without_state, get_env_id, get_media_url) -> None:
     page = set_up_tear_down_without_state
 

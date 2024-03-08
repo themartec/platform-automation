@@ -31,6 +31,7 @@ def get_data_of_media(env_id: str, media_url: str):
                     "[C2638] Edit media mode - Load assets - Story tab - Load all related videos from edit video of a story and video is also viewable in preview window\n"
                     "Uploaded Video Size: 720KB")
 @allure.tag("C2564", "C2638")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2564\n{os.getenv('TESTRAIL_URL')}2638")
 def test_studio_export_video_720(set_up_tear_down,
                                  get_env_id,
                                  get_media_url,
@@ -67,6 +68,7 @@ def test_studio_export_video_720(set_up_tear_down,
               "in Timeline")
 @allure.description("Uploaded Video Size: 720KB")
 @allure.tag("C2565", "C2639")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2564\n{os.getenv('TESTRAIL_URL')}2639")
 def test_studio_export_video_1080(set_up_tear_down, get_base_studio_url,
                                   get_content_id,
                                   remove_and_get_tested_download_files) -> None:
@@ -94,6 +96,7 @@ def test_studio_export_video_1080(set_up_tear_down, get_base_studio_url,
 @allure.title("[C2566] Save to Story - Save video to story as 720P")
 @allure.description("")
 @allure.tag("C2566")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2566")
 def test_studio_save_to_story_video_720(set_up_tear_down, get_base_studio_url,
                                         get_base_url,
                                         get_content_id,
@@ -119,6 +122,7 @@ def test_studio_save_to_story_video_720(set_up_tear_down, get_base_studio_url,
 @allure.title("[C2567] Save to Story - Save video to story as 1080P")
 @allure.description("")
 @allure.tag("C2567")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2567")
 def test_studio_save_to_story_video_1080(set_up_tear_down,
                                          get_base_studio_url,
                                          get_base_url,
