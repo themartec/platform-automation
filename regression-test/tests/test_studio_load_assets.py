@@ -150,23 +150,23 @@ def test_studio_load_assets_brand_tab_and_timeline_behavior(set_up_tear_down_wit
     with allure.step("By default, All tab is showing with all media types"):
         studio_page.check_all_media_types_shown_in_all_tab_name(number_of_media=4)
     with allure.step("[Logos] Click on Logos tab and check logo can be added to timeline and remove"):
-        studio_page.click_on_tab_name(StudioSubTab.LOGOS)
+        studio_page.click_on_tab_name(StudioSubTab.LOGOS.value)
         studio_page.check_media_can_be_added_and_remove_in_timeline("Image 01")
     with allure.step("[Logos] Validate that image won't be shown here"):
         studio_page.check_logo_is_not_shown_image()
 
     with allure.step("[Videos] Click on Videos tab and check video can be added to timeline and remove"):
-        studio_page.click_on_tab_name(StudioSubTab.VIDEOS)
+        studio_page.click_on_tab_name(StudioSubTab.VIDEOS.value)
         studio_page.check_media_can_be_added_and_remove_in_timeline("Video 01")
 
     with allure.step("[Music] Click on Music tab and check video can be added to timeline and remove"):
         studio_page.click_on_media_tab()
-        studio_page.click_on_tab_name(StudioSubTab.MUSIC)
+        studio_page.click_on_tab_name(StudioSubTab.MUSIC.value)
         time.sleep(30)
         studio_page.check_media_can_be_added_and_remove_in_timeline("Music 02")
 
     with allure.step("[Images] Click on Music tab and check video can be added to timeline and remove"):
-        studio_page.click_on_tab_name(StudioSubTab.IMAGES)
+        studio_page.click_on_tab_name(StudioSubTab.IMAGES.value)
         studio_page.check_media_can_be_added_and_remove_in_timeline("Image 01")
         studio_page.check_image_is_not_shown_logo()
 
