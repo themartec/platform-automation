@@ -12,7 +12,7 @@ class MainEmployerPage:
         self.page.get_by_role("link", name="Story Hub").click()
 
     def access_creative_studio_tab(self):
-        self.page.get_by_role("link", name="Creative Studio").click()
+        self.page.get_by_role("link", name="Creative Studio").click(timeout=10000)
 
     def access_content_recipes(self):
         self.page.get_by_role("link", name="Content Recipes", exact=True).click()
