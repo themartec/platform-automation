@@ -96,21 +96,6 @@ def test_upload_for_multiple_logos(reset_state_studio_video, get_base_studio_api
         assert len(data) > 0
         assert data["message"] == "Response Success"
         assert len(data["data"]) == len(file_list_dir)
-    with allure.step("Performance Metric"):
-        current_date = get_date_as_yyyymmdd()
-        images = data["data"]
-        for image in images:
-            file_name = image["logoName"]
-            speed_time = get_upload_time(get_base_studio_api_url,
-                                         current_date,
-                                         "duration",
-                                         file_name)
-            logger.info(f"[Performance Metric][{current_date}] file name: {file_name}, speed_time: {speed_time}")
-            file_size = get_upload_time(get_base_studio_api_url,
-                                        current_date,
-                                        "fileSize",
-                                        file_name) / (1024 * 1024)
-            logger.info(f"[Performance Metric][{current_date}] file name: {file_name}, file_size: {file_size:.2f} MB")
 
 
 @allure.title("[C2557] Upload Company Brand - Video upload for single [HD, < 100MB, mp4] video")

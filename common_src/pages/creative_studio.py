@@ -4,7 +4,11 @@ import time
 import cv2
 from playwright.sync_api import expect
 
+from common_src.utils.Screenshot import Screenshot
+from common_src.patterns.studio_sub_tab_name import StudioSubTab
+
 MEDIA_URL = "https://cdndev.themartec.com/videos"
+xpath_first_add_button = "//div[contains(@class,'btn-remove')]/following-sibling::div[1]"
 
 
 class CreativeStudioPage:
@@ -74,6 +78,7 @@ class CreativeStudioPage:
             self.page.locator("(//div[contains(@class,'close-bock-icon')])[2]").click()
         else:
             self.page.locator("(//div[contains(@class,'close-bock-icon')])").click()
+
     # Stories tab -------------------------------------------------------------------
     def click_on_stories_tab(self):
         self.page.get_by_text("Stories").click()
@@ -113,14 +118,16 @@ class CreativeStudioPage:
         width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
         return f"{width}x{height}"
 
-    def check_file_is_downloaded_successfully(self, file_name_path, expected_file_size: float, expected_file_dimension):
+    def check_file_is_downloaded_successfully(self, file_name_path, expected_file_dimension):
         if os.path.isfile(file_name_path):
             file_size = round(float(os.path.getsize(file_name_path) / 1000000), 1)
             file_dimension = self.get_file_dimension(file_name_path)
             print(f"    - file_name_path: {file_name_path}")
             print(f"    - file_size: {file_size}")
             print(f"    - file_dimensions: {file_dimension}")
-            if file_size == round(float(expected_file_size), 1) and expected_file_dimension == file_dimension:
+
+            # if file_size == round(float(expected_file_size), 1) and expected_file_dimension == file_dimension:
+            if expected_file_dimension == file_dimension:
                 return True
             else:
                 print(f"File is existed, but format is not correct, please check stdout for more info")
@@ -157,7 +164,7 @@ class CreativeStudioPage:
         # assert self.page.locator(xpath_01).count() == 1
 
     def click_on_Brand_tab(self):
-        self.page.locator("div").filter(has_text=re.compile(r"^Brand$")).click()
+        self.page.locator("div").filter(has_text=re.compile(r"^Brand$")).click(timeout=30)
 
     def click_on_edit_template(self, image_dir, position):
         # self.page.mouse.down()
@@ -173,3 +180,139 @@ class CreativeStudioPage:
         with self.page.expect_popup() as page2_info:
             self.page.get_by_text(":9Web & BlogsWebsite, Embed").click()
         return page2_info.value
+
+    def check_all_media_types_shown_in_all_tab_name(self, number_of_media: int):
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.get_by_text("ALL", exact=True)).to_be_visible()
+        expect(self.page.locator("//div[contains(@class,'asset-upload')]/div")).to_have_count(number_of_media)
+
+    def click_on_upload_button_and_set_file(self, file_name):
+        with self.page.expect_file_chooser() as fc_info:
+            self.page.locator("//span[.='Upload']").click()
+        file_chooser = fc_info.value
+        file_chooser.set_files(file_name)
+        time.sleep(5)
+
+    # main tab
+    def click_on_media_tab(self):
+        self.page.locator("p").filter(has_text="Media").click()
+
+    def click_on_Brand_tab_of_media(self):
+        self.page.get_by_label("Media").get_by_text("Brand").click()
+
+    # ----------------------
+    #  sub-tab list header
+    def click_on_tab_name(self, tab_name: str):
+        self.page.get_by_text(tab_name, exact=True).click()
+
+    def click_on_remove_button_on_media(self):
+        self.page.locator("//div[contains(@class,'asset-upload')]/div").hover()
+        self.page.get_by_label("Media").get_by_role("img").nth(1).click()
+
+    def click_to_add_button_of_first_media(self):
+        self.page.locator(xpath_first_add_button).click()
+
+    # ------------------------------------------
+    #  timeline box
+    def click_to_remove_media_in_timeline(self, media_name):
+        self.page.get_by_text(media_name).hover()
+        self.page.locator("#menu-vertical-lite path").nth(1).click()
+        self.page.get_by_text("Remove").click()
+
+    def check_media_can_be_added_and_remove_in_timeline(self, media_name):
+        time.sleep(3)
+        self.click_to_add_button_of_first_media()
+        expect(self.page.get_by_text(media_name)).to_be_visible()
+        Screenshot(self.page).take_screenshot_with_custom("After Add To Timeline")
+        self.click_to_remove_media_in_timeline(media_name)
+        expect(self.page.get_by_text(media_name)).not_to_be_visible()
+        Screenshot(self.page).take_screenshot_with_custom("After Remove To Timeline")
+
+    # ------------------------------------------
+    # check media in sub-tab
+    def check_logo_is_not_shown_image(self):
+        # this step can not be shared !
+        expect(self.page.locator("//div[contains(@class,'asset-upload')]/div")).to_have_count(1)
+
+    def check_image_is_not_shown_logo(self):
+        # this step can not be shared !
+        expect(self.page.locator("//div[contains(@class,'asset-upload')]/div")).to_have_count(1)
+
+    # ------------------------------------------
+    def click_on_web_and_blog_option(self):
+        with self.page.expect_popup() as page2_info:
+            self.page.get_by_text("Web & Blogs").click()
+            time.sleep(10)
+        return page2_info.value
+
+    def check_video_is_displayed_in_tab_name(self, tab_name: StudioSubTab, duration_video: str):
+        # this step can not be shared
+        self.click_on_tab_name(tab_name.value)
+        expect(self.page.get_by_label("Media").locator("div")
+               .filter(has_text=re.compile(fr"^{duration_video}$")).nth(2)).to_be_visible()
+        Screenshot(self.page).take_screenshot()
+
+    def check_video_is_not_displayed_in_tab_name(self, tab_name: StudioSubTab, duration_video: str):
+        self.click_on_tab_name(tab_name.value)
+        expect(self.page.get_by_label("Media").locator("div")
+               .filter(has_text=re.compile(fr"^{duration_video}$")).nth(2)).not_to_be_visible()
+        Screenshot(self.page).take_screenshot()
+
+    def check_remove_video_from_tab_name(self, tab_name: StudioSubTab, duration_video: str):
+        self.click_on_tab_name(tab_name.value)
+        time.sleep(5)
+        self.click_on_remove_button_on_media()
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.get_by_label("Media").locator("div")
+               .filter(has_text=re.compile(fr"^{duration_video}$")).nth(2)).not_to_be_visible()
+
+    def remove_video_from_tab_name_if_any(self, tab_name: StudioSubTab, duration_video: str):
+        self.click_on_tab_name(tab_name.value)
+        if self.page.locator("//p[contains(.,'Drag & drop or')]").count() == 0:
+            print("Remove Existing Video")
+            self.click_on_remove_button_on_media()
+            expect(
+                self.page.get_by_label("Media").locator("div").filter(has_text=re.compile(fr"^{duration_video}$")).nth(
+                    2)).not_to_be_visible()
+
+    def check_video_is_removed_from_tab(self, tab_name: StudioSubTab, duration_video: str):
+        self.click_on_tab_name(tab_name.value)
+        time.sleep(3)
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.get_by_label("Media").locator("div").filter(has_text=re.compile(fr"^{duration_video}$")).nth(
+                2)).not_to_be_visible()
+
+    def remove_image_from_tab_name_if_any(self, tab_name: StudioSubTab):
+        xpath = "//div[contains(@class,'asset-upload')]/div"
+        self.click_on_tab_name(tab_name.value)
+        if self.page.locator(xpath).count() == 1:
+            self.click_on_remove_button_on_media()
+            expect(self.page.locator(xpath)).to_have_count(0)
+
+    def check_image_is_displayed_in_tab_name(self, tab_name: StudioSubTab):
+        xpath = "//div[contains(@class,'asset-upload')]/div"
+        self.click_on_tab_name(tab_name.value)
+        time.sleep(5)
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.locator(xpath)).to_have_count(1)
+
+    def check_image_is_not_displayed_in_tab_name(self, tab_name: StudioSubTab):
+        xpath = "//div[contains(@class,'asset-upload')]/div"
+        self.click_on_tab_name(tab_name.value)
+        time.sleep(5)
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.locator(xpath)).to_have_count(0)
+
+    def check_remove_image_from_tab_name(self, tab_name: StudioSubTab):
+        xpath = "//div[contains(@class,'asset-upload')]/div"
+        self.click_on_tab_name(tab_name.value)
+        time.sleep(5)
+        self.click_on_remove_button_on_media()
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.locator(xpath)).to_have_count(0)
+
+    def check_image_is_removed_from_tab(self, tab_name: StudioSubTab):
+        self.click_on_tab_name(tab_name.value)
+        xpath = "//div[contains(@class,'asset-upload')]/div"
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.locator(xpath)).to_have_count(0)

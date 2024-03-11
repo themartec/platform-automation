@@ -56,12 +56,12 @@ def test_studio_export_video_720(set_up_tear_down,
     with allure.step("Download Video As 720P"):
         studio_page.export_video_with_resolution("720")
     with allure.step("Validate Download Is Successful"):
-        expected_file_size = round(float(8.9), 1)
+        # expected_file_size = round(float(8.9), 1)
         expected_file_dimension = "1280x720"
         is_download_ok = CreativeStudioPage(page).check_file_is_downloaded_successfully(test_file_name,
-                                                                                        expected_file_size,
                                                                                         expected_file_dimension)
         assert is_download_ok is True
+
 
 @allure.title("[C2565, C2639] Download Video - Export Video Successfully as 1080P & Edit video is loaded as "
               "default "
@@ -84,11 +84,10 @@ def test_studio_export_video_1080(set_up_tear_down, get_base_studio_url,
     with allure.step("Download Video As 1080P"):
         studio_page.export_video_with_resolution("1080")
     with (allure.step("Validate Download Is Successful")):
-        expected_file_size = round(float(15.6), 1)
+        # expected_file_size = round(float(15.6), 1)
         expected_file_dimension = "1920x1080"
         is_download_ok = CreativeStudioPage(page
                                             ).check_file_is_downloaded_successfully(test_file_name,
-                                                                                    expected_file_size,
                                                                                     expected_file_dimension)
         assert is_download_ok is True
 

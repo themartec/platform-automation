@@ -3,6 +3,7 @@ import allure
 import os
 import sys
 
+
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent.replace('regression-test', ''))
@@ -11,6 +12,7 @@ from common_src.pages.login import LoginPage
 from common_src.pages.main_employer import MainEmployerPage
 from common_src.pages.creative_studio import CreativeStudioPage
 from common_src.pages.edit_mode_studio import EditModeStudioPage
+from common_src.patterns.studio_sub_tab_name import StudioSubTab
 
 content_id_dev = "a693aafd-0313-4089-8e48-2bfecdb093e3"
 content_id_stg = "d0075dc7-7aca-40ca-9781-48b25615b363"
@@ -74,7 +76,7 @@ def test_studio_load_assets_company_template(set_up_tear_down_without_state, get
                                                                           template_tag_company)
     with allure.step("Hover on template & Click on edit template"):
         template_image_dir = get_data_of_template_image_dir_company(get_env_id, get_media_url)
-        CreativeStudioPage(page).click_on_edit_template(template_image_dir,1)
+        CreativeStudioPage(page).click_on_edit_template(template_image_dir, 1)
         time.sleep(25)
     with allure.step("Validate video is available in timeline"):
         EditModeStudioPage(page).check_timeline_has_video()
@@ -108,19 +110,140 @@ def test_studio_load_assets_personal_template(set_up_tear_down_without_state, ge
         template_image_dir_personal = get_data_of_template_image_dir_personal(get_env_id, get_media_url)
         template_name_personal = "Automation Personal Template"
         template_tag_personal = "Career Stories"
-        CreativeStudioPage(page).check_template_is_shown_on_Templates_tab(template_image_dir_personal,
-                                                                          template_name_personal,
-                                                                          template_tag_personal)
+        creative_page = CreativeStudioPage(page)
+        creative_page.check_template_is_shown_on_Templates_tab(template_image_dir_personal,
+                                                               template_name_personal,
+                                                               template_tag_personal)
 
     with allure.step("Validate only personal template is shown in Brand tab"):
-        CreativeStudioPage(page).check_template_is_shown_on_Templates_tab(template_image_dir_personal,
-                                                                          template_name_personal,
-                                                                          template_tag_personal)
+        creative_page.check_template_is_shown_on_Templates_tab(template_image_dir_personal,
+                                                               template_name_personal,
+                                                               template_tag_personal)
     with allure.step("Hover on template & Click on edit template"):
-        CreativeStudioPage(page).click_on_edit_template(template_image_dir_personal, 2)
+        creative_page.click_on_edit_template(template_image_dir_personal, 2)
         time.sleep(20)
     with allure.step("Validate media as image is available in timeline"):
         EditModeStudioPage(page).check_timeline_has_image()
     with allure.step("Validate text effect Headline is available in timeline"):
         EditModeStudioPage(page).check_timeline_has_text_effects_as("Headline Text")
 
+
+@allure.title("[C2571] Brand - Load assets in tabs & add asset to timeline and remove")
+@allure.description("")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2571")
+def test_studio_load_assets_brand_tab_and_timeline_behavior(set_up_tear_down_without_state, get_env_id,
+                                                            get_media_url) -> None:
+    page = set_up_tear_down_without_state
+
+    with allure.step("Log in"):
+        LoginPage(page).enter_username_password(os.getenv("USER_NAME_OF_NON_ISOLATED_ACC"),
+                                                os.getenv("PASSWORD_OF_NON_ISOLATED_ACC"))
+        MainEmployerPage(page).access_content_recipes()
+    with allure.step("Access to Creative Studio Edit page"):
+        MainEmployerPage(page).access_creative_studio_tab()
+        # time.sleep(15)
+        creative_page = CreativeStudioPage(page)
+        edit_page = creative_page.click_on_web_and_blog_option()
+    with allure.step("Click on Brand sub-tab of Media tab"):
+        studio_page = CreativeStudioPage(edit_page)
+        studio_page.click_on_Brand_tab_of_media()
+    with allure.step("By default, All tab is showing with all media types"):
+        studio_page.check_all_media_types_shown_in_all_tab_name(number_of_media=4)
+    with allure.step("[Logos] Click on Logos tab and check logo can be added to timeline and remove"):
+        studio_page.click_on_tab_name(StudioSubTab.LOGOS)
+        studio_page.check_media_can_be_added_and_remove_in_timeline("Image 01")
+    with allure.step("[Logos] Validate that image won't be shown here"):
+        studio_page.check_logo_is_not_shown_image()
+
+    with allure.step("[Videos] Click on Videos tab and check video can be added to timeline and remove"):
+        studio_page.click_on_tab_name(StudioSubTab.VIDEOS)
+        studio_page.check_media_can_be_added_and_remove_in_timeline("Video 01")
+
+    with allure.step("[Music] Click on Music tab and check video can be added to timeline and remove"):
+        studio_page.click_on_media_tab()
+        studio_page.click_on_tab_name(StudioSubTab.MUSIC)
+        time.sleep(30)
+        studio_page.check_media_can_be_added_and_remove_in_timeline("Music 02")
+
+    with allure.step("[Images] Click on Music tab and check video can be added to timeline and remove"):
+        studio_page.click_on_tab_name(StudioSubTab.IMAGES)
+        studio_page.check_media_can_be_added_and_remove_in_timeline("Image 01")
+        studio_page.check_image_is_not_shown_logo()
+
+
+@allure.title("[C2644] Upload From All tab -Brand - Upload Video in ALL tabs & Remove It")
+@allure.description("")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2644")
+def test_studio_upload_from_all_tab_for_video(set_up_tear_down_without_state, get_env_id, get_media_url) \
+        -> None:
+    page = set_up_tear_down_without_state
+
+    with allure.step("Log in"):
+        LoginPage(page).enter_username_password(os.getenv("USER_NAME_OF_NON_ISOLATED_ACC_02"),
+                                                os.getenv("PASSWORD_OF_NON_ISOLATED_ACC"))
+        MainEmployerPage(page).access_content_recipes()
+    with allure.step("Access to Creative Studio Edit page"):
+        MainEmployerPage(page).access_creative_studio_tab()
+        # time.sleep(15)
+        creative_page = CreativeStudioPage(page)
+        edit_page = creative_page.click_on_web_and_blog_option()
+    with allure.step("Click on Brand sub-tab of Media tab"):
+        studio_page = CreativeStudioPage(edit_page)
+        studio_page.click_on_Brand_tab_of_media()
+        video_file_name = f"test_data/media/video_30s_480x270_710kB.mov"
+        video_duration_time = "00:30"
+        # Remove all video for fresh test
+        studio_page.remove_video_from_tab_name_if_any(tab_name=StudioSubTab.VIDEOS, duration_video=video_duration_time)
+    with allure.step("From All Tab, upload a video"):
+        studio_page.click_on_tab_name(StudioSubTab.ALL.value)
+        studio_page.click_on_upload_button_and_set_file(video_file_name)
+    with allure.step("Validate Video is displayed in All Tab"):
+        studio_page.check_video_is_displayed_in_tab_name(tab_name=StudioSubTab.ALL, duration_video=video_duration_time)
+    with allure.step("Validate Video is displayed in Video Tab"):
+        studio_page.check_video_is_displayed_in_tab_name(tab_name=StudioSubTab.VIDEOS,
+                                                         duration_video=video_duration_time)
+    with allure.step("Validate Video is not displayed in Image, Logos, Music Tab"):
+        studio_page.check_video_is_not_displayed_in_tab_name(tab_name=StudioSubTab.IMAGES,
+                                                             duration_video=video_duration_time)
+        studio_page.check_video_is_not_displayed_in_tab_name(tab_name=StudioSubTab.LOGOS,
+                                                             duration_video=video_duration_time)
+        studio_page.check_video_is_not_displayed_in_tab_name(tab_name=StudioSubTab.MUSIC,
+                                                             duration_video=video_duration_time)
+    with allure.step("Validate Video can be removed from ALL tab, not displayed in ALL tab & Video tab anymore"):
+        studio_page.check_remove_video_from_tab_name(tab_name=StudioSubTab.ALL, duration_video=video_duration_time)
+        studio_page.check_video_is_removed_from_tab(tab_name=StudioSubTab.VIDEOS, duration_video=video_duration_time)
+
+
+@allure.title("[C2648] Upload From All tab - Brand - Upload Image in ALL tabs & Remove It")
+@allure.description("")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2648")
+def test_studio_upload_from_all_tab_for_image(set_up_tear_down_without_state, get_env_id, get_media_url) \
+        -> None:
+    page = set_up_tear_down_without_state
+
+    with allure.step("Log in"):
+        LoginPage(page).enter_username_password(os.getenv("USER_NAME_OF_NON_ISOLATED_ACC_02"),
+                                                os.getenv("PASSWORD_OF_NON_ISOLATED_ACC"))
+        MainEmployerPage(page).access_content_recipes()
+    with allure.step("Access to Creative Studio Edit page"):
+        MainEmployerPage(page).access_creative_studio_tab()
+        # time.sleep(15)
+        creative_page = CreativeStudioPage(page)
+        edit_page = creative_page.click_on_web_and_blog_option()
+    with allure.step("Click on Brand sub-tab of Media tab"):
+        studio_page = CreativeStudioPage(edit_page)
+        studio_page.click_on_Brand_tab_of_media()
+        media_file_name = f"test_data/media/shrimp_auto.png"
+        # Remove all video for fresh test
+        studio_page.remove_image_from_tab_name_if_any(tab_name=StudioSubTab.IMAGES)
+    with allure.step("From All Tab, upload a image"):
+        studio_page.click_on_upload_button_and_set_file(media_file_name)
+    with allure.step("Validate Image is displayed in All Tab"):
+        studio_page.check_image_is_displayed_in_tab_name(tab_name=StudioSubTab.ALL)
+    with allure.step("Validate Image is displayed in Images Tab"):
+        studio_page.check_image_is_displayed_in_tab_name(tab_name=StudioSubTab.IMAGES)
+    with allure.step("Validate Image is not displayed in Logos Tab"):
+        studio_page.check_image_is_not_displayed_in_tab_name(tab_name=StudioSubTab.LOGOS)
+    with allure.step("Validate Image can be removed from ALL tab"):
+        studio_page.check_remove_image_from_tab_name(tab_name=StudioSubTab.ALL)
+        studio_page.check_image_is_removed_from_tab(tab_name=StudioSubTab.IMAGES)
