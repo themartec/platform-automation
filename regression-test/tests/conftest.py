@@ -1,4 +1,4 @@
-import logging
+
 import os
 import time
 
@@ -61,6 +61,7 @@ def set_up_tear_down(playwright: Playwright, request) -> None:
     url = match_env(test_env_id)
     print(f"TEST ENV: {url}")
     browser = playwright.chromium.launch(headless=False, slow_mo=1000)
+    # huong.trinh@themartec.com
     if test_env_id == "1":
         context = browser.new_context(storage_state="auth_regression_staging.json")
     elif test_env_id == "2":
