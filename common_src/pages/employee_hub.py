@@ -42,6 +42,7 @@ class EmployeeHubPage:
         # Check avatar
         expect(self.page.get_by_role("cell", name=expected_account_info[0]).get_by_role("img")).to_be_visible()
 
+    # MAIN PAGE
     def click_on_filter_button(self):
         self.page.get_by_text("Filter").click()
 
@@ -50,6 +51,21 @@ class EmployeeHubPage:
 
     def click_on_clear_all_button(self):
         self.page.get_by_role("button", name="Clear All").click()
+
+    def click_on_active_people_button(self):
+        self.page.get_by_role("button", name="activate people").click()
+
+    def click_on_direct_invite_option(self):
+        self.page.get_by_text("Direct InviteOutreach people").click()
+
+    def click_on_adv_name_in_list(self, adv_name):
+        self.page.get_by_text(adv_name).click()
+
+    def click_on_adv_details_tab(self):
+        self.page.get_by_text("Advocate Details").nth(1).click()
+
+    def search_by_name(self, search_name):
+        self.page.get_by_placeholder("Search for an advocate, a").fill(search_name)
 
     def remove_filter(self):
         self.click_on_filter_button()
@@ -71,6 +87,30 @@ class EmployeeHubPage:
         self.page.locator(f"#react-select-33-option-{order}").click()
         Screenshot(self.page).take_screenshot()
 
+    def click_on_back_button_from_adv_details(self):
+        self.page.locator("div").filter(has_text=re.compile(r"^Advocate Details24$")).get_by_role("button").click()
+
+    def hover_on_three_dot_button_and_delete(self):
+        self.page.locator("//button[@type='button']").hover()
+        self.page.get_by_role("button", name="Delete").click()
+
+    # ACTIVE PEOPLE
+    def click_on_copy_invite_link_button(self):
+        # need to grant permission of clipboard
+        self.page.locator("//span[.='copy invite link']").click()
+        time.sleep(3)
+        Screenshot(self.page).take_screenshot()
+
+    def click_on_back_button_from_active_people_page(self):
+        self.page.locator("div").filter(has_text=re.compile(r"^Activate People$")).get_by_role("button").click()
+        expect(self.page.locator("#root")).to_contain_text("Employee Hub")
+
+    def get_clipboard_data(self):
+        # Content must be granted for permission
+        clipboard_text = self.page.evaluate('() => navigator.clipboard.readText()')
+        return clipboard_text
+
+    # --------------------------------------------------------------
     def check_filter_is_correct(self, expected_tex_list: list):
         Screenshot(self.page).take_screenshot()
         xpath = f"//div[@class='tr rdt_TableRow']"
@@ -96,3 +136,42 @@ class EmployeeHubPage:
 
     def check_filter_result_as_empty(self):
         expect(self.page.get_by_text("Click here to add an advocate")).to_be_visible()
+
+    def check_adv_overview_info(self, adv_name, adv_role):
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.locator("#root")).to_contain_text(adv_name)
+        expect(self.page.locator("#root")).to_contain_text(adv_role)
+
+    def check_adv_details(self, user_info):
+        # ["Test", f"Dummy {random_num}", "Advocacy Dummy", "Engineering", "English"]
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.locator("#firstName")).to_have_value(user_info[0])
+        expect(self.page.locator("#lastName")).to_have_value(user_info[1])
+        expect(self.page.locator("#role")).to_have_value(user_info[2])
+        expect(self.page.locator("div").filter(has_text=re.compile(fr"^{user_info[3]}$")).nth(3)).to_be_visible()
+        expect(self.page.get_by_text(user_info[4])).to_be_visible()
+        expect(self.page.locator("//input[@id='email']")).to_have_value(user_info[5])
+
+    # Direct Invite
+    def click_on_save_template_button(self):
+        self.page.get_by_role("button", name="Save Template").click()
+
+    def enter_new_template_name(self, template_name):
+        self.page.get_by_placeholder("Your template name").fill(template_name)
+        self.page.get_by_role("button", name="save", exact=True).click()
+
+    def select_email_template_name(self, template_name):
+        self.page.get_by_role("option", name=template_name).click()
+
+    def check_body_email_template(self, body):
+        (expect(self.page.get_by_label("Rich Text Editor, main"))
+         .to_contain_text(body))
+
+    def update_template_with_content(self, old_content, new_content):
+        self.page.get_by_label("Rich Text Editor, main").fill(
+            f"{new_content}")
+        Screenshot(self.page).take_screenshot()
+
+    def check_new_template_is_shown_in_direct_invite(self, name):
+        expect(self.page.get_by_text(name)).to_be_visible()
+

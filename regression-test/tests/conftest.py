@@ -1,4 +1,3 @@
-
 import os
 import time
 
@@ -68,7 +67,7 @@ def set_up_tear_down(playwright: Playwright, request) -> None:
         context = browser.new_context(storage_state="auth_regression_dev.json")
     else:
         context = browser.new_context()
-
+    context.grant_permissions(['clipboard-read', 'clipboard-write'])
     page = context.new_page()
     page.goto(url)
     time.sleep(5)
@@ -166,5 +165,24 @@ def set_up_tear_down_with_network_profile(playwright: Playwright, request) -> Br
     def teardown():
         print("Tear down is called !")
         browser.close()
+
+    request.addfinalizer(teardown)
+
+
+@pytest.fixture(scope="function")
+def init_context(playwright: Playwright, request) -> BrowserContext:
+    test_env_id = get_env_from_command(request)
+    print("Set up is called !")
+    # load_dotenv()
+    # test_env_id = os.getenv('TEST_ENV')
+    url = match_env(test_env_id)
+    print(f"TEST ENV: {url}")
+    browser = playwright.chromium.launch(headless=False, slow_mo=1000)
+    context = browser.new_context()
+    yield context
+
+    def teardown():
+        print("Tear down is called !")
+        context.close()
 
     request.addfinalizer(teardown)

@@ -25,3 +25,6 @@ class MainEmployerPage:
 
     def access_employee_hub(self):
         self.page.get_by_role("link", name="Employee Hub", exact=True).click()
+
+    def access_settings(self):
+        self.page.get_by_role("link", name="Settings").click()
