@@ -21,9 +21,9 @@ class StoryHubPage:
     def click_on_story_title(self, title):
         self.page.get_by_role("cell", name=title).get_by_role("paragraph").click()
 
-    def check_story_title_shown_in_story_details(self, title):
-        # expect(self.page.getByText(title)).toBeVisible()
-        expect(self.page.locator("#root")).to_contain_text(title)
+    def search_by_content(self, content):
+        self.page.get_by_placeholder("Search for stories or").fill(content)
+        self.page.get_by_placeholder("Search for stories or").press("Enter")
 
     def click_on_create_AI_Prompts_button(self):
         self.page.get_by_role("button", name="Create AI Prompts").click()
@@ -65,6 +65,19 @@ class StoryHubPage:
 
         return list_content
 
+    def delete_story(self):
+        xpath = "//button[contains(@class,'ellipsis-button')]/following-sibling::div"
+        self.page.locator(xpath).hover()
+        self.page.get_by_role("button", name="Delete").click()
+        self.page.get_by_role("button", name="OK").click()
+
+    def check_story_is_deleted_from_search_view(self):
+        expect(self.page.get_by_text("Click here to create a new")).to_be_visible()
+
+    # Assert
+    def check_story_title_shown_in_story_details(self, title):
+        expect(self.page.locator("#root")).to_contain_text(title)
+
     def check_adv_is_shown_in_story_details(self, adv_name):
         expect(self.page.get_by_text(adv_name).first).to_be_visible()
 
@@ -83,3 +96,21 @@ class StoryHubPage:
         assert '.mp4' in media_link[0]
         # assert 'story/how-do-you-stay-motivated-and-productive-while-working-remotely' in media_link[0]
         return media_link
+
+    def check_story_info_is_shown_in_list(self, story_info):
+        Screenshot(self.page).take_screenshot()
+        elements = self.page.locator("//div[@role='row']")
+        is_shown = False
+        print(f"story_info: {story_info}")
+        for i in range(elements.count()):
+            text_row = elements.nth(i).text_content()
+            print(f"text_row: {text_row}")
+            if story_info.lower() in text_row.lower():
+                is_shown = True
+                assert is_shown is True
+                return
+        assert is_shown is True
+
+    def check_story_hub_is_shown(self):
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.get_by_text("Story Hub")).to_have_count(2)

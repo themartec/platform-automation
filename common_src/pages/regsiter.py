@@ -89,3 +89,14 @@ class RegisterPage:
         expect(self.page.locator("form")).to_contain_text(info_list[3])
         expect(self.page.locator("div").filter(has_text=re.compile(rf"^{info_list[4]}$")).nth(1)).to_be_visible()
         expect(self.page.locator("//input[@id='email']")).to_have_value(info_list[5])
+
+    def check_register_page_shown(self):
+        xpath = "//p[.='EMAIL']"
+        expect(self.page.locator(xpath)).to_be_visible()
+        register_url = self.page.evaluate('() => document.URL')
+        assert 'advocate/register' in register_url
+
+    def check_story_title_is_shown(self, story_title):
+        Screenshot(self.page).take_screenshot()
+        xpath = f"//p[.='{story_title}']"
+        expect(self.page.locator(xpath)).to_be_visible()

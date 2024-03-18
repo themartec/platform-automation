@@ -3,7 +3,6 @@ import allure
 import os
 import sys
 
-
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent.replace('regression-test', ''))
@@ -247,3 +246,31 @@ def test_studio_upload_from_all_tab_for_image(set_up_tear_down_without_state, ge
     with allure.step("Validate Image can be removed from ALL tab"):
         studio_page.check_remove_image_from_tab_name(tab_name=StudioSubTab.ALL)
         studio_page.check_image_is_removed_from_tab(tab_name=StudioSubTab.IMAGES)
+
+
+@allure.title("[C2652] Edit Video - Split Video")
+@allure.description("")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2652")
+def test_studio_split_video(set_up_tear_down, get_base_studio_url, get_content_id, get_media_url):
+    page = set_up_tear_down
+    tested_story_url = f"{get_base_studio_url}home?contentId={get_content_id}&contentType=STORY"
+    with allure.step("Access tested story from Story Hub"):
+        MainEmployerPage(page).access_url(tested_story_url)
+        time.sleep(10)
+    with allure.step("Click on Stories tab"):
+        studio_page = CreativeStudioPage(page)
+        studio_page.click_on_stories_tab()
+    with allure.step("Split the shown video into 2 parts in timeline box"):
+        edit_mode_page = EditModeStudioPage(page)
+        edit_mode_page.move_slider_to_half_thumbnail_video()
+        edit_mode_page.click_on_video_thumbnail_in_timeline()
+        edit_mode_page.click_on_split_video_button()
+    with allure.step("Validate splitting video is successful"):
+        with allure.step("There is 2 parts of split video"):
+            edit_mode_page.check_video_is_split_into(2)
+        with allure.step("Split duration is correct as 00:15 each part"):
+            edit_mode_page.check_split_video_duration(2, "00:15")
+    with allure.step("Now, Click on Undo button"):
+        edit_mode_page.click_on_undo_button()
+    with allure.step("Validate video is not split after undoing, duration should be 00:30"):
+        edit_mode_page.check_video_is_not_split("00:30")

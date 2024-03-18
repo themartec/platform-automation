@@ -24,7 +24,7 @@ class Screenshot:
             name='full page screenshot',
             attachment_type=allure.attachment_type.PNG
         )
-        time.sleep(5)
+        time.sleep(3)
 
     def take_screenshot_with_custom(self, description):
         png_bytes = self.page.screenshot()
@@ -33,5 +33,5 @@ class Screenshot:
             name=description,
             attachment_type=allure.attachment_type.PNG
         )
-        time.sleep(5)
+        time.sleep(3)
 

@@ -11,6 +11,10 @@ import allure
 from e2e_test.src.utils.Screenshot import Screenshot
 
 
+def get_common_generated_question_xpath(order):
+    return f"//p[.='Generated Questions']/following-sibling::div[{order}]"
+
+
 class StoryBuilderPage:
     def __init__(self, page):
         self.page = page
@@ -80,9 +84,6 @@ class StoryBuilderPage:
     def check_suggested_list_includes_text(self, text):
         expect(self.page.locator('div:nth-child(2) > div.topic-list')).to_contain_text(text)
 
-    # def check_header_of_topic_page(self, text):
-    #     expect(self.page.get_by_text(text)).to_have_text(text)
-
     def get_first_title_in_suggest_list(self):
         # SUGGESTED FOR YOU
         return self.page.locator('(//*[@class="topic-list"]/div[1])[1]').text_content()
@@ -111,12 +112,94 @@ class StoryBuilderPage:
         self.click_on_create_new()
 
     def assign_story_to_adv(self, adv_name):
-        self.page.get_by_role("button", name="Next").click()
+        self.click_on_next_button()
         self.choose_advocate_to_assign(adv_name)
-        self.page.get_by_role("button", name="Next").click()
+        self.click_on_next_button()
         self.page.get_by_role("button", name="Submit").click()
         self.page.locator("#modal").get_by_role("button").first.click()
 
-
     def get_first_question(self):
         return self.page.locator("//p[contains(.,'Generated Questions')]/following-sibling::div[1]").text_content()
+
+    # Click Action
+    def click_on_employer_branding_category_tab(self):
+        self.page.locator("//p[.='Employer Branding']").click()
+
+    def click_on_talent_acquisition_category_tab(self):
+        self.page.locator("//p[.='Talent Acquisition']").click()
+
+    def click_on_create_custom_story(self):
+        self.page.get_by_text("Create Custom Story").click()
+
+    def click_on_company_written(self):
+        self.page.get_by_text("Company Written").click()
+
+    def click_on_create_new_button(self):
+        self.page.get_by_role("button", name="Create New").click()
+
+    def click_on_next_button(self):
+        self.page.get_by_role("button", name="Next").click()
+
+    # Other Actions
+    def enter_brief_topic_to_text_box(self, topic_name):
+        self.page.get_by_placeholder("Enter a topic, select from").fill(topic_name)
+
+    def get_question_content_at_order(self, order: int):
+        xpath = get_common_generated_question_xpath(order)
+        return self.page.locator(xpath).text_content()
+
+    def check_on_box_of_question_at_order(self, order: int):
+        self.page.locator(get_common_generated_question_xpath(order)).click()
+
+    def update_question_with_new_content_at_order(self, order: int, new_content: str):
+        xpath = get_common_generated_question_xpath(order)
+        self.page.locator(xpath).hover()
+        self.page.locator(xpath + "/button").click()
+        self.page.get_by_role("textbox").first.fill(new_content)
+        self.page.get_by_role("textbox").first.press("Enter")
+        Screenshot(self.page).take_screenshot()
+
+    # Assertion
+    def check_categories_topic_list(self, topics_text):
+        elements_text = self.page.locator("div.css-1dzy8az > div").text_content()
+        print(f"elements_text: {elements_text}")
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.locator("div.css-1dzy8az > div")).to_have_text(topics_text)
+
+    def check_heading_with_content(self, content):
+        expect(self.page.get_by_text(content)).to_be_visible()
+
+    def check_topic_with_content(self, content):
+        expect(self.page.get_by_text(content)).to_be_visible()
+
+    def check_border_color(self, order: int, color: str):
+        xpath = get_common_generated_question_xpath(order)
+
+        current_color = self.page.locator(xpath).evaluate('(e) => window.getComputedStyle(e).getPropertyValue('
+                                                          '"border-top-color")')
+        print(f"color: {color}")
+        assert current_color == color
+
+    def check_updated_question_is_correct(self, order: int, content):
+        expect(self.page.get_by_text(content)).to_be_visible()
+        expect(self.page.locator(get_common_generated_question_xpath(order)+"//input")).to_be_checked()
+
+    def check_summary_page(self, heading, topic_name, tag, questions_list):
+        expect(self.page.get_by_text(heading)).to_be_visible()
+        expect(self.page.get_by_text(topic_name)).to_be_visible()
+        expect(self.page.locator(f"//p[.='Tag']/following-sibling::div[.='{tag}']")).to_be_visible()
+        for question in questions_list:
+            expect(self.page.get_by_role("button", name=question)).to_be_visible()
+            print(f"Check for question '{question} is correct !'")
+
+    def check_dialog_is_shown_after_submitting(self):
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.get_by_role("img", name="brand cover")).to_be_visible()
+        expect(self.page.get_by_text("Your story has been submitted")).to_be_visible()
+        self.page.get_by_text("We’ll notify you when the").click()
+        expect(self.page.get_by_role("button", name="Share story link")).to_be_visible()
+
+    def check_dialog_is_not_shown(self):
+        expect(self.page.get_by_role("img", name="brand cover")).not_to_be_visible()
+
+

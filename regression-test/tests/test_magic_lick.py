@@ -54,7 +54,7 @@ def test_magic_link_01(set_up_tear_down, init_context):
     with allure.step("[New window] At 'Set up your profile' page, click on CREATE PROFILE button"
                      " without entering to any textbox"):
         register_page.click_on_sign_up_button()
-        time.sleep(60)
+
     with allure.step("[New window] Validate warning text will show for configured "
                      "required fields (First Name, Last Name, Role)"):
         register_page.check_warning_texts()

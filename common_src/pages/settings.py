@@ -49,3 +49,9 @@ class SettingsPage:
     def check_default_is_marked(self, name):
         xpath = f"//div/p[.='{name}']/parent::*/parent::*/*[name()='svg']"
         expect(self.page.locator(xpath)).to_be_visible()
+
+    def check_list_of_invite_adv_templates(self, template_list):
+        Screenshot(self.page).take_screenshot()
+        for template_name in template_list:
+            xpath = f"//p[.='{template_name}']"
+            expect(self.page.locator(xpath)).to_be_visible()
