@@ -1,14 +1,7 @@
-import json
-import time
-
-from playwright.sync_api import Playwright, sync_playwright, expect
+from playwright.sync_api import expect
 import re
 
-from e2e_test.src.ai_evals_logic.similarity_check import check_for_similarity
-from e2e_test.src.pages.main_employer import MainEmployerPage
-import allure
-
-from e2e_test.src.utils.Screenshot import Screenshot
+from common_src.utils.Screenshot import Screenshot
 
 
 class StoryHubPage:
