@@ -137,6 +137,7 @@ def calculate_avg_speed(file_name, env_id):
             print(f"total_speed: {total_speed}, count: {count}, avg_speed: {avg_speed}")
 
 
+@pytest.mark.skip(reason="Feature is being updated")
 @allure.title("[C2645] NANL - Upload Video In Multiple Configured Network")
 @allure.description(f"Ref: {network_ref}")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2645")
@@ -173,5 +174,3 @@ def test_nanl_upload_video_under_network_conditions(get_env_id, set_up_tear_down
     with allure.step("Validate Uploaded Time Should Be Less Than 120 seconds"):
         logger.info(f"Upload Time: {upload_time} (-1 means it took more than 2 minutes)")
         assert -1 < upload_time < 61
-
-

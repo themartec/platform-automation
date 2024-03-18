@@ -41,6 +41,7 @@ def pytest_addoption(parser):
 def get_env_from_command(request):
     name_value = request.config.option.env_id
     if name_value is None:
+        print("Skip as lack of env id")
         pytest.skip()
     return name_value
 

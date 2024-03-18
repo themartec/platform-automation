@@ -66,7 +66,9 @@ class StoryHubPage:
         return list_content
 
     def delete_story(self):
-        xpath = "//button[contains(@class,'ellipsis-button')]/following-sibling::div"
+        xpath = "//button[contains(@class,'ellipsis-button')]"
+        xpath_01 = "//div[contains(@class,'infinite-scroll-component')]//div[@role='row']"
+        self.page.locator(xpath_01).hover()
         self.page.locator(xpath).hover()
         self.page.get_by_role("button", name="Delete").click()
         self.page.get_by_role("button", name="OK").click()

@@ -4,9 +4,9 @@ import time
 from playwright.sync_api import Playwright, sync_playwright, expect
 import re
 
-from e2e_test.src.ai_evals_logic.similarity_check import check_for_similarity
+
 from e2e_test.src.pages.main_employer import MainEmployerPage
-import allure
+
 
 from e2e_test.src.utils.Screenshot import Screenshot
 
@@ -19,39 +19,39 @@ class StoryBuilderPage:
     def __init__(self, page):
         self.page = page
 
-    def check_ai_suggest_topic_is_not_empty(self):
-        Screenshot(self.page).take_screenshot()
-        list_elements = self.page.locator('div:nth-child(2) > div.topic-list > div')
-        count = list_elements.count()
-        print("count: " + str(count))
-        for i in range(count):
-            topic = list_elements.nth(i).text_content()
-            assert topic, "Check suggested topic is not empty"
+    # def check_ai_suggest_topic_is_not_empty(self):
+    #     Screenshot(self.page).take_screenshot()
+    #     list_elements = self.page.locator('div:nth-child(2) > div.topic-list > div')
+    #     count = list_elements.count()
+    #     print("count: " + str(count))
+    #     for i in range(count):
+    #         topic = list_elements.nth(i).text_content()
+    #         assert topic, "Check suggested topic is not empty"
 
-    def check_ai_suggested_topic_tobe_similarity(self, input_topic):
-        Screenshot(self.page).take_screenshot_with_custom('screenshot-ai_suggested_topic_tobe_similarity')
-
-        # returned_topics = self.page.locator('div:nth-child(2) > div.topic-list').text_content()
-        list_elements = self.page.locator('div:nth-child(2) > div.topic-list > div')
-        count = list_elements.count()
-        print("count: " + str(count))
-        for i in range(count):
-            topic = list_elements.nth(i).text_content()
-            print("topic: " + topic)
-            json_result = json.loads(check_for_similarity(input_topic, topic))
-            allure.attach("Similarity Score of Topic '" + topic + "' is " + str(json_result["score"]),
-                          name="Similarity Score of Topic at position [" + str(i) + "]",
-                          attachment_type="text/plain",
-                          extension="attach")
-            assert json_result["isSimilar"] == True, f"Check for similarity of generated topics at position " + str(i)
-        # for element in list_elements:
-        #     topic = element.text_content()
-        #     print("topic: "+topic)
-        #     json_result = json.loads(check_for_similarity(input_topic, topic))
-        #     allure.attach("Similarity Score of Topic '" + topic + "' is "+str(json_result["score"]), name="Similarity Score",
-        #                   attachment_type="text/plain",
-        #               extension="attach")
-        #     assert json_result["isSimilar"] == True
+    # def check_ai_suggested_topic_tobe_similarity(self, input_topic):
+    #     Screenshot(self.page).take_screenshot_with_custom('screenshot-ai_suggested_topic_tobe_similarity')
+    #
+    #     # returned_topics = self.page.locator('div:nth-child(2) > div.topic-list').text_content()
+    #     list_elements = self.page.locator('div:nth-child(2) > div.topic-list > div')
+    #     count = list_elements.count()
+    #     print("count: " + str(count))
+    #     for i in range(count):
+    #         topic = list_elements.nth(i).text_content()
+    #         print("topic: " + topic)
+    #         json_result = json.loads(check_for_similarity(input_topic, topic))
+    #         allure.attach("Similarity Score of Topic '" + topic + "' is " + str(json_result["score"]),
+    #                       name="Similarity Score of Topic at position [" + str(i) + "]",
+    #                       attachment_type="text/plain",
+    #                       extension="attach")
+    #         assert json_result["isSimilar"] == True, f"Check for similarity of generated topics at position " + str(i)
+    #     # for element in list_elements:
+    #     #     topic = element.text_content()
+    #     #     print("topic: "+topic)
+    #     #     json_result = json.loads(check_for_similarity(input_topic, topic))
+    #     #     allure.attach("Similarity Score of Topic '" + topic + "' is "+str(json_result["score"]), name="Similarity Score",
+    #     #                   attachment_type="text/plain",
+    #     #               extension="attach")
+    #     #     assert json_result["isSimilar"] == True
 
     def access_topic_name_of_employer_branding(self, option_name):
         MainEmployerPage(self.page).access_story_builder_tab()

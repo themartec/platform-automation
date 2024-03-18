@@ -1,3 +1,4 @@
+import os
 import platform
 import configparser
 import sys
@@ -28,5 +29,7 @@ config['DEFAULT'] = {'os_platform': os_platform,
                      'python_version': python_version,
                      'env_info': env_info,
                      'browser_type': browser_type}
-with open('allure-results/environment.properties', 'w') as configfile:
-    config.write(configfile)
+
+if os.path.exists('allure-results'):
+    with open('allure-results/environment.properties', 'w') as configfile:
+        config.write(configfile)

@@ -127,7 +127,8 @@ def test_category(set_up_tear_down, init_context):
             with allure.step("Search topic name in Story Hub"):
                 story_hub.search_by_content(tested_topic)
                 adv_name = f"Story Dummy {random_num}"
-            with allure.step(f"Validate topic name as '{tested_topic}', status as 'ACCEPTED' and assigned adv name '{adv_name}'"):
+            with allure.step(
+                    f"Validate topic name as '{tested_topic}', status as 'ACCEPTED' and assigned adv name '{adv_name}'"):
                 story_info_02 = f"{tested_topic}Accepted{adv_name}"
                 story_hub.check_story_info_is_shown_in_list(story_info_02)
     with allure.step("C2675 - Story Hub - Be Able to Delete A Story by employer"):

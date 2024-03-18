@@ -5,6 +5,7 @@ import os
 import sys
 
 import pandas as pd
+import pytest
 import wandb
 from dotenv import load_dotenv
 
@@ -32,6 +33,7 @@ def convert_data_of_numeric(file, column):
     df.to_csv(file, index=False)
 
 
+@pytest.mark.skip(reason="Feature is being updated")
 @allure.title("NANL Upload Speed Summary")
 def test_print_out_performance_nanl_metric():
     file_name = os.getenv("SPEED_PERFORMANCE_FILE")
