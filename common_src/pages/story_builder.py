@@ -1,14 +1,11 @@
-import json
+
 import time
 
-from playwright.sync_api import Playwright, sync_playwright, expect
+from playwright.sync_api import expect
 import re
 
-
-from e2e_test.src.pages.main_employer import MainEmployerPage
-
-
-from e2e_test.src.utils.Screenshot import Screenshot
+from common_src.pages.main_employer import MainEmployerPage
+from common_src.utils.Screenshot import Screenshot
 
 
 def get_common_generated_question_xpath(order):
