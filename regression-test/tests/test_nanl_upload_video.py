@@ -137,7 +137,7 @@ def calculate_avg_speed(file_name, env_id):
             print(f"total_speed: {total_speed}, count: {count}, avg_speed: {avg_speed}")
 
 
-@pytest.mark.skip(reason="Feature is being updated")
+# @pytest.mark.skip(reason="Feature is being updated")
 @allure.title("[C2645] NANL - Upload Video In Multiple Configured Network")
 @allure.description(f"Ref: {network_ref}")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2645")
