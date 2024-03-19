@@ -26,5 +26,5 @@ def init_csv_file_with_column(column_name, filename):
 
 remove_file(FILE_NAME_01)
 remove_file(FILE_NAME_02)
-remove_folder('allure-results')
+# remove_folder('allure-results')
 init_csv_file_with_column(["Time", "Network Config", "Upload Speed"], "upload_history.csv")
