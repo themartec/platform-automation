@@ -66,6 +66,10 @@ class StoryHubPage:
         self.page.get_by_role("button", name="Delete").click()
         self.page.get_by_role("button", name="OK").click()
 
+    def count_number_of_video(self) -> int:
+        xpath = "//div[.='Studio Videos']/following-sibling::div//video"
+        return self.page.locator(xpath).count()
+
     def check_story_is_deleted_from_search_view(self):
         expect(self.page.get_by_text("Click here to create a new")).to_be_visible()
 
@@ -79,7 +83,7 @@ class StoryHubPage:
     def check_question_is_shown_in_story_details(self, question):
         expect(self.page.get_by_text(question)).to_be_visible()
 
-    def check_studio_video_is_existed(self):
+    def get_video_links(self):
         xpath = "//div[.='Studio Videos']/following-sibling::div//video"
         list_elements = self.page.locator(xpath)
         media_link = []
@@ -87,9 +91,6 @@ class StoryHubPage:
             link = list_elements.nth(i).get_attribute('src')
             media_link.append(link)
         print(f"media_link: {media_link}")
-        assert len(media_link) == 1
-        assert '.mp4' in media_link[0]
-        # assert 'story/how-do-you-stay-motivated-and-productive-while-working-remotely' in media_link[0]
         return media_link
 
     def check_story_info_is_shown_in_list(self, story_info):

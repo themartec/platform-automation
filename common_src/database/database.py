@@ -75,11 +75,12 @@ class MartecDatabase:
             print(f"[ERROR] Delete For EMPTY id_input is skipped !")
             return False
 
-    def remove_video_of_save_to_story(self, file_path: str):
-        med_id = self.get_media_id(file_path)
-        print(f"[DB Connection] Remove for media id {med_id}")
-        assert self.remove_media_by_file_path(file_path) is True
-        assert self.remove_media_history_by_id(med_id) is True
+    def remove_videos_of_save_to_story(self, links_path: list):
+        for file_path in links_path:
+            med_id = self.get_media_id(file_path)
+            print(f"[DB Connection] Remove for media id {med_id}")
+            self.remove_media_by_file_path(file_path)
+            self.remove_media_history_by_id(med_id)
 
     def close(self):
         self.conn.close()

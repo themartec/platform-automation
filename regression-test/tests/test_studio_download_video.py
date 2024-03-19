@@ -12,6 +12,7 @@ from common_src.pages.main_employer import MainEmployerPage
 from common_src.pages.creative_studio import CreativeStudioPage
 from common_src.pages.story_hub import StoryHubPage
 from common_src.database.database import MartecDatabase
+from common_src.actions.click_on_button import click_on_button_name
 
 COMMON_STEP_NAME_01 = "Access Tested Story From Story Hub"
 
@@ -103,19 +104,29 @@ def test_studio_save_to_story_video_720(set_up_tear_down, get_base_studio_url,
     page = set_up_tear_down
     base_url = get_base_studio_url
     tested_story_url = f"{base_url}home?contentId={get_content_id}&contentType=STORY"
+    print(f"get_env_id: {get_env_id}")
+    story_details_url = f"{get_base_url}employer/dashboard/{get_content_id}"
     with allure.step(COMMON_STEP_NAME_01):
-        MainEmployerPage(page).access_url(tested_story_url)
-        time.sleep(10)
+        main_page = MainEmployerPage(page)
+        main_page.access_url(story_details_url)
+        click_on_button_name(page, "Next")
+        story_page = StoryHubPage(page)
+        before_videos = story_page.count_number_of_video()
+        print(f"Number Of Video Before Testing: {before_videos}")
+
+        main_page.access_url(tested_story_url)
+        time.sleep(5)
     with allure.step("Save to Story"):
         CreativeStudioPage(page).save_to_story_video_with_resolution("720")
     with (allure.step("Validate Save Video To Story Is Successful")):
-        print(f"get_env_id: {get_env_id}")
-        story_details_url = f"{get_base_url}employer/dashboard/{get_content_id}"
-        MainEmployerPage(page).access_url(story_details_url)
-        StoryHubPage(page).click_on_next_button()
-        media_link = StoryHubPage(page).check_studio_video_is_existed()
+        main_page.access_url(story_details_url)
+        click_on_button_name(page, "Next")
+        after_videos = story_page.count_number_of_video()
+        print(f"Number Of Video After Testing: {after_videos}")
+        assert after_videos == (before_videos + 1)
+        media_links = story_page.get_video_links()
         database_connection = MartecDatabase(get_env_id)
-        database_connection.remove_video_of_save_to_story(media_link[0])
+        database_connection.remove_videos_of_save_to_story(media_links)
 
 
 @allure.title("[C2567] Save to Story - Save video to story as 1080P")
@@ -130,16 +141,26 @@ def test_studio_save_to_story_video_1080(set_up_tear_down,
     page = set_up_tear_down
     base_url = get_base_studio_url
     tested_story_url = f"{base_url}home?contentId={get_content_id}&contentType=STORY"
+    print(f"get_env_id: {get_env_id}")
+    story_details_url = f"{get_base_url}employer/dashboard/{get_content_id}"
     with allure.step(COMMON_STEP_NAME_01):
-        MainEmployerPage(page).access_url(tested_story_url)
-        time.sleep(10)
+        main_page = MainEmployerPage(page)
+        main_page.access_url(story_details_url)
+        click_on_button_name(page, "Next")
+        story_page = StoryHubPage(page)
+        before_videos = story_page.count_number_of_video()
+        print(f"Number Of Video Before Testing: {before_videos}")
+
+        main_page.access_url(tested_story_url)
+        time.sleep(5)
     with allure.step("Save to Story"):
         CreativeStudioPage(page).save_to_story_video_with_resolution("1080")
     with (allure.step("Validate Save Video To Story Is Successful")):
-        print(f"get_env_id: {get_env_id}")
-        story_details_url = f"{get_base_url}employer/dashboard/{get_content_id}"
-        MainEmployerPage(page).access_url(story_details_url)
-        StoryHubPage(page).click_on_next_button()
-        media_link = StoryHubPage(page).check_studio_video_is_existed()
+        main_page.access_url(story_details_url)
+        click_on_button_name(page, "Next")
+        after_videos = story_page.count_number_of_video()
+        print(f"Number Of Video After Testing: {after_videos}")
+        assert after_videos == (before_videos + 1)
+        media_links = story_page.get_video_links()
         database_connection = MartecDatabase(get_env_id)
-        database_connection.remove_video_of_save_to_story(media_link[0])
+        database_connection.remove_videos_of_save_to_story(media_links)

@@ -22,6 +22,7 @@ class MainEmployerPage:
 
     def access_url(self, url):
         self.page.goto(url)
+        time.sleep(3)
 
     def access_employee_hub(self):
         self.page.get_by_role("link", name="Employee Hub", exact=True).click()
