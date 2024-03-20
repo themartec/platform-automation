@@ -69,8 +69,7 @@ def test_magic_link_01(set_up_tear_down, init_context):
                                          language="English")
         register_page.click_on_create_profile_button()
     with allure.step("[New window] Validate error message will shown on screen"):
-        # waiting
-        pass
+        register_page.check_error_email_taken()
 
 
 @allure.title("[C2574][2] Non-SSO - Copy Invite advocate magic link is worked as expected With A Non-Existing Email")
@@ -143,5 +142,3 @@ def test_magic_link_02(set_up_tear_down, init_context):
             employee_page.click_on_adv_details_tab()
         with allure.step("Validate Advocate Details is matching to Register details"):
             employee_page.check_adv_details(user_info)
-
-
