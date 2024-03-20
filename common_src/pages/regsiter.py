@@ -32,7 +32,7 @@ class RegisterPage:
         self.page.locator("#firstName").click()
         self.page.locator("#firstName").fill(first_name)
         self.page.locator("#lastName").fill(last_name)
-        self.page.locator("div").filter(has_text=re.compile(r"^Select or create$")).nth(3).click()
+        self.page.locator("//div[.='Department']/following-sibling::div").click()
         self.page.get_by_text(department, exact=True).click()
         self.page.locator("#role").fill(role)
         self.page.locator("div").filter(has_text=re.compile(r"^Select$")).nth(3).click()
@@ -64,9 +64,9 @@ class RegisterPage:
         Screenshot(self.page).take_screenshot()
         expect(self.page.locator("//p[contains(.,'Welcome')]")).to_be_visible()
 
-    def check_my_stories_is_shown_as_default(self):
-        Screenshot(self.page).take_screenshot()
-        expect(self.page.locator("//div[@type='adv']//p[contains(.,'My Stories')]")).to_be_visible()
+    # def check_my_stories_is_shown_as_default(self):
+    #     Screenshot(self.page).take_screenshot()
+    #     expect(self.page.locator("//div[@type='adv']//p[contains(.,'My Stories')]")).to_be_visible()
 
     def check_sign_up_button_is_disable(self):
         expect(self.page.locator("//p[contains(.,'Sign Up')]/parent::*")).to_be_disabled()
@@ -75,28 +75,9 @@ class RegisterPage:
         expect(self.page.get_by_role("img", name="Photo Preview")).to_be_visible()
         expect(self.page.get_by_role("button").first).to_be_visible()
 
-    def check_data_consistency_between_register_and_settings(self, info_list: list):
-        # list as [firstname, lastname, role, department, language]
-        self.page.get_by_role("link", name="Settings").click()
-        MainEmployerPage(self.page).access_settings()
-        Screenshot(self.page).take_screenshot()
-        expect(self.page.get_by_role("img", name="Photo Preview")).to_be_visible()
-        expect(self.page.get_by_role("button").nth(2)).to_be_visible()
-
-        expect(self.page.locator("#firstName")).to_have_value(info_list[0])
-        expect(self.page.locator("#lastName")).to_have_value(info_list[1])
-        expect(self.page.locator("#role")).to_have_value(info_list[2])
-        expect(self.page.locator("form")).to_contain_text(info_list[3])
-        expect(self.page.locator("div").filter(has_text=re.compile(rf"^{info_list[4]}$")).nth(1)).to_be_visible()
-        expect(self.page.locator("//input[@id='email']")).to_have_value(info_list[5])
-
     def check_register_page_shown(self):
         xpath = "//p[.='EMAIL']"
         expect(self.page.locator(xpath)).to_be_visible()
         register_url = self.page.evaluate('() => document.URL')
         assert 'advocate/register' in register_url
 
-    def check_story_title_is_shown(self, story_title):
-        Screenshot(self.page).take_screenshot()
-        xpath = f"//p[.='{story_title}']"
-        expect(self.page.locator(xpath)).to_be_visible()

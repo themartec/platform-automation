@@ -12,6 +12,7 @@ sys.path.append(parent.replace('regression-test', ''))
 from common_src.pages.main_employer import MainEmployerPage
 from common_src.pages.employee_hub import EmployeeHubPage
 from common_src.pages.regsiter import RegisterPage
+from common_src.pages.my_adv_stories import MyStoriesPage
 
 
 def generate_random_string():
@@ -124,10 +125,11 @@ def test_magic_link_02(set_up_tear_down, init_context):
         register_page.check_welcome_after_register_successfully()
         register_page.click_on_skip_button_at_welcome_page()
     with allure.step("[New window] Validate My Stories Page is shown after skipping"):
-        register_page.check_my_stories_is_shown_as_default()
+        my_story = MyStoriesPage(page02)
+        my_story.check_my_stories_is_shown_as_default()
     with allure.step("[New window] Input info are displayed correctly in Settings of Advocate portal when login by "
                      "that advocate"):
-        register_page.check_data_consistency_between_register_and_settings(user_info)
+        my_story.check_data_consistency_between_register_and_settings(user_info)
     with allure.step("[Origin window] Input info are displayed correctly in Advocate details via Admin portal"):
         with allure.step("Back To Employee Hub"):
             employee_page.click_on_back_button_from_active_people_page()

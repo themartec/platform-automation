@@ -141,12 +141,20 @@ class StoryBuilderPage:
     def enter_brief_topic_to_text_box(self, topic_name):
         self.page.get_by_placeholder("Enter a topic, select from").fill(topic_name)
 
+    def enter_custom_question_and_add(self, question):
+        self.page.get_by_placeholder("Add a Custom Question").fill(question)
+        self.page.get_by_role("button", name="Add").click()
+
     def get_question_content_at_order(self, order: int):
         xpath = get_common_generated_question_xpath(order)
         return self.page.locator(xpath).text_content()
 
     def check_on_box_of_question_at_order(self, order: int):
         self.page.locator(get_common_generated_question_xpath(order)).click()
+
+    def check_on_box_box_of_my_question_at_order(self, order: int):
+        xpath = f"//p[.='My Questions']/following-sibling::div[{order}]"
+        self.page.locator(xpath).click()
 
     def update_question_with_new_content_at_order(self, order: int, new_content: str):
         xpath = get_common_generated_question_xpath(order)
@@ -156,12 +164,35 @@ class StoryBuilderPage:
         self.page.get_by_role("textbox").first.press("Enter")
         Screenshot(self.page).take_screenshot()
 
+    def click_on_x_button_of_dialog(self):
+        self.page.locator("#modal").get_by_role("button").first.click()
+
+    def update_topic_with_new_content(self, old_topic_name, new_topic_content):
+        # At step Match a Topic & Select Question step
+        xpath = f"(//p[.='{old_topic_name}'])[2]"
+        self.page.locator(xpath).hover()
+        self.page.locator(xpath + "/following-sibling::button").click()
+        self.page.get_by_role("textbox").first.fill(new_topic_content)
+        self.page.get_by_role("textbox").first.press("Enter")
+        Screenshot(self.page).take_screenshot()
+
+    def search_for_adv_name(self, adv_name):
+        self.page.get_by_placeholder("Search for an advocate").fill(adv_name)
+        self.page.get_by_text("Assign to Advocates").click()
+
+    def assign_to_adv(self, adv_name):
+        self.page.locator(f"//p[.='{adv_name}']/parent::div/preceding-sibling::div//span").click()
+
     # Assertion
     def check_categories_topic_list(self, topics_text):
         elements_text = self.page.locator("div.css-1dzy8az > div").text_content()
         print(f"elements_text: {elements_text}")
         Screenshot(self.page).take_screenshot()
         expect(self.page.locator("div.css-1dzy8az > div")).to_have_text(topics_text)
+
+    def check_chosen_topic_shown_in_heading_and_topic_field(self, topic_name):
+        expect(self.page.get_by_text(topic_name, exact=True).nth(1)).to_be_visible()
+        expect(self.page.get_by_text(topic_name, exact=True).first).to_be_visible()
 
     def check_heading_with_content(self, content):
         expect(self.page.get_by_text(content)).to_be_visible()
@@ -179,24 +210,54 @@ class StoryBuilderPage:
 
     def check_updated_question_is_correct(self, order: int, content):
         expect(self.page.get_by_text(content)).to_be_visible()
-        expect(self.page.locator(get_common_generated_question_xpath(order)+"//input")).to_be_checked()
+        expect(self.page.locator(get_common_generated_question_xpath(order) + "//input")).to_be_checked()
 
-    def check_summary_page(self, heading, topic_name, tag, questions_list):
-        expect(self.page.get_by_text(heading)).to_be_visible()
-        expect(self.page.get_by_text(topic_name)).to_be_visible()
+    def check_summary_page_talent_flow(self, heading, topic_name, tag, questions_list):
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.locator(f"//p[.='{heading}']")).to_be_visible()
+        expect(self.page.locator("p").filter(has_text=re.compile(fr"^{topic_name}$"))).to_be_visible(timeout=10000)
+        expect(self.page.locator(f"//p[.='Tag']/following-sibling::div[.='{tag}']")).to_be_visible()
+        for question in questions_list:
+            expect(self.page.get_by_role("button", name=question)).to_be_visible()
+            print(f"Check for question '{question} is correct !'")
+
+    def check_summary_page_branding_flow(self, heading, topic_name, tag, questions_list):
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.locator(f"//p[.='{heading}']")).to_be_visible()
+        expect(self.page.locator(f"//p[.='{topic_name}']")).to_be_visible()
         expect(self.page.locator(f"//p[.='Tag']/following-sibling::div[.='{tag}']")).to_be_visible()
         for question in questions_list:
             expect(self.page.get_by_role("button", name=question)).to_be_visible()
             print(f"Check for question '{question} is correct !'")
 
     def check_dialog_is_shown_after_submitting(self):
+        # Assign later by link
         Screenshot(self.page).take_screenshot()
         expect(self.page.get_by_role("img", name="brand cover")).to_be_visible()
         expect(self.page.get_by_text("Your story has been submitted")).to_be_visible()
         self.page.get_by_text("We’ll notify you when the").click()
         expect(self.page.get_by_role("button", name="Share story link")).to_be_visible()
 
+    def check_dialog_is_shown_after_submitting_01(self):
+        # Having adv to be assigned in flow
+        expect(self.page.get_by_text("Your story has been assigned!")).to_be_visible()
+
     def check_dialog_is_not_shown(self):
         expect(self.page.get_by_role("img", name="brand cover")).not_to_be_visible()
 
+    def check_my_question(self, custom_question):
+        expect(self.page.get_by_text("My Questions")).to_be_visible()
+        expect(self.page.locator(".checkbox-wbg").first).to_be_visible()
+        expect(self.page.get_by_text(custom_question)).to_be_visible()
+        Screenshot(self.page).take_screenshot()
 
+    def check_search_result_of_adv(self, adv_name_role):
+        xpath = "//div[@class='border-container']/div/p/parent::div"
+        content = self.page.locator(xpath).text_content().lower()
+        assert content == adv_name_role
+
+    def check_adv_info_is_shown(self, adv_name):
+        expect(self.page.get_by_text(adv_name)).to_be_visible()
+
+    def check_page_heading_content(self, heading_content):
+        expect(self.page.locator(f"//p[.='{heading_content}']")).to_be_visible()

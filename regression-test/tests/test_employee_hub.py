@@ -34,7 +34,7 @@ def test_account_list(set_up_tear_down):
 @allure.description(f"")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2581")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2582")
-def test_add_new_advocate_template(set_up_tear_down, init_context_with_base_url):
+def test_add_new_advocate_template(set_up_tear_down, init_a_page_with_base_url):
     page = set_up_tear_down
     with allure.step("Access Settings"):
         main_page = MainEmployerPage(page)
@@ -83,7 +83,7 @@ def test_add_new_advocate_template(set_up_tear_down, init_context_with_base_url)
             setting_page.click_on_option("Message Templates")
             setting_page.check_template_shown_on_invite_advocate(new_template_name)
     with allure.step("[C2582] Email templates are synced for accounts in the same company"):
-        page02 = init_context_with_base_url
+        page02 = init_a_page_with_base_url
         LoginPage(page02).enter_username_password(os.getenv("USER_NAME_OF_EMPLOYER_2"),
                                                   os.getenv("PASSWORD_OF_NON_ISOLATED_ACC"))
         with allure.step("Access to Settings > Message Templates > Invite Advocate"):

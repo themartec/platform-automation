@@ -34,6 +34,17 @@ def match_env(test_env: str):
     return base_url
 
 
+@pytest.fixture(scope="function")
+def get_env_name(request) -> str:
+    test_env = get_env_from_command(request)
+    if test_env == "1":
+        return 'staging'
+    elif test_env == "2":
+        return 'dev'
+    else:
+        return ''
+
+
 def pytest_addoption(parser):
     parser.addoption("--env_id", action="store")
 
@@ -190,7 +201,7 @@ def init_context(playwright: Playwright, request) -> BrowserContext:
 
 
 @pytest.fixture(scope="function")
-def init_context_with_base_url(playwright: Playwright, request) -> BrowserContext:
+def init_a_page_with_base_url(playwright: Playwright, request) -> BrowserContext:
     test_env_id = get_env_from_command(request)
     print("Set up is called !")
     # load_dotenv()
