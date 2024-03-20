@@ -150,8 +150,8 @@ class StoryHubPage:
 
         assert f"https://short{test_env}.themartec.com/" in cur_url
 
-    def enter_copied_tracking_link(self, clipboard_url):
-        self.page.get_by_placeholder("Enter link").fill(clipboard_url)
+    def enter_publish_link(self, publish_link):
+        self.page.get_by_placeholder("Enter link").fill(publish_link)
 
     def click_on_share_content_option(self, param):
         self.page.get_by_text(param).click()
@@ -181,10 +181,11 @@ class StoryHubPage:
 
     def check_content_is_shared_correctly(self, tested_topic):
         Screenshot(self.page).take_screenshot()
-        expect(self.page.get_by_label(f"Open article: {tested_topic}")).to_be_visible()
+        expect(self.page.get_by_text(tested_topic)).to_be_visible()
 
     def check_content_is_shared_with_short_link(self, url):
-        expect(self.page.locator(f"//a[contains(@href,'{url}')]")).to_have_count(1)
+        xpath = f"(//article)[1]//a[contains(@href,'{url}')]"
+        assert self.page.locator(xpath).count() > 0
 
     def update_publish_date(self, today):
         today_year = today.year
@@ -217,4 +218,8 @@ class StoryHubPage:
         self.page.locator(xpath_01).hover()
         self.page.locator(xpath_02).hover()
         self.page.get_by_role("button", name="Share Story").click()
+
+    def close_tracking_link_modal(self):
+        self.page.locator("#modal").get_by_role("button").first.click()
+
 

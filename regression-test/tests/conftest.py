@@ -71,7 +71,7 @@ def set_up_tear_down(playwright: Playwright, request) -> None:
     # test_env_id = os.getenv('TEST_ENV')
     url = match_env(test_env_id)
     print(f"TEST ENV: {url}")
-    browser = playwright.chromium.launch(headless=False, slow_mo=500)
+    browser = playwright.chromium.launch(headless=False, slow_mo=500, channel="chrome")
     # huong.trinh@themartec.com
     if test_env_id == "1":
         context = browser.new_context(storage_state="auth_regression_staging.json")

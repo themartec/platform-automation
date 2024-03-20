@@ -97,8 +97,8 @@ class EmployeeHubPage:
     # ACTIVE PEOPLE
     def click_on_copy_invite_link_button(self):
         # need to grant permission of clipboard
-        self.page.locator("//span[.='copy invite link']").click()
-        time.sleep(3)
+        time.sleep(5)
+        self.page.locator("//div[.='copy invite link']").click()
         Screenshot(self.page).take_screenshot()
 
     def click_on_back_button_from_active_people_page(self):
@@ -106,7 +106,7 @@ class EmployeeHubPage:
         expect(self.page.locator("#root")).to_contain_text("Employee Hub")
 
     def get_clipboard_data(self):
-        # Content must be granted for permission
+        # Context must be granted for permission
         clipboard_text = self.page.evaluate('() => navigator.clipboard.readText()')
         return clipboard_text
 

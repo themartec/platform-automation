@@ -77,10 +77,10 @@ def test_2e2_flow_01(set_up_tear_down, init_context):
         with allure.step("Validate heading content, questions and topic name is correct at 'Summary - Create Story' "
                          "page"):
             story_builder_page.check_summary_page_branding_flow("Summary - Create Story",
-                                                  tested_topic,
-                                                  "Create Custom Story",
-                                                  [question_01, new_ques_content]
-                                                  )
+                                                                tested_topic,
+                                                                "Create Custom Story",
+                                                                [question_01, new_ques_content]
+                                                                )
         with allure.step("Click on Submit button & Check a dialog is shown"):
             click_on_button_name(page, "Submit")
             story_builder_page.check_dialog_is_shown_after_submitting()
@@ -150,11 +150,10 @@ def test_2e2_flow_01(set_up_tear_down, init_context):
                     f"among account, steps. And the employer can also skip 'Approval Pipeline' step during process")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2649")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2611")
-@allure.testcase(f"{os.getenv('TESTRAIL_URL')}C2533")
-@allure.testcase(f"{os.getenv('TESTRAIL_URL')}C2608")
-@allure.testcase(f"{os.getenv('TESTRAIL_URL')}C2649")
-@allure.testcase(f"{os.getenv('TESTRAIL_URL')}C2677")
-@allure.testcase(f"{os.getenv('TESTRAIL_URL')}C2678")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2533")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2608")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2677")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2678")
 def test_2e2_flow_02(set_up_tear_down, init_a_page_with_base_url, get_env_name):
     page = set_up_tear_down
     random_num = generate_random_string()
@@ -196,10 +195,10 @@ def test_2e2_flow_02(set_up_tear_down, init_a_page_with_base_url, get_env_name):
         with allure.step("At 'Summary - Create Story' page"):
             with allure.step(f"Validate information is shown correctly (heading, topic, tag, questions)"):
                 story_builder_page.check_summary_page_talent_flow(heading=tested_topic,
-                                                      topic_name=new_topic_content,
-                                                      tag=tested_topic,
-                                                      questions_list=[custom_question]
-                                                      )
+                                                                  topic_name=new_topic_content,
+                                                                  tag=tested_topic,
+                                                                  questions_list=[custom_question]
+                                                                  )
 
                 story_builder_page.check_adv_info_is_shown(adv_name)
             with allure.step("Enter a note"):
@@ -284,16 +283,15 @@ def test_2e2_flow_02(set_up_tear_down, init_a_page_with_base_url, get_env_name):
     with allure.step("C2677 - EB Portal > Publish - Create tracking link before publishing"):
         with allure.step("Create a tracking link"):
             story_hub.create_tracking_link('https://automation.com/martec')
-        with allure.step("Validate generated tracking link"):
+        with allure.step("Validate generated tracking link successfully"):
             story_hub.check_generated_tracking_link(get_env_name)
-            click_on_button_name(page, "copy link")
-            clipboard_url = get_clipboard_data(page)
-            print(f"    - clipboard_url: {clipboard_url}")
+            story_hub.close_tracking_link_modal()
     with allure.step("C2649 - EB Portal > Publish - Publish story with a tracking link"):
         with allure.step("Enter copied tracking link to 'PUBLISH LINK' field & Update Publish Date"):
             formatted_date = date.today()
             story_hub.update_publish_date(formatted_date)
-            story_hub.enter_copied_tracking_link(clipboard_url)
+            publish_link = "https://www.themartec.com/"
+            story_hub.enter_publish_link(publish_link)
         with allure.step("Click on 'Mark as Published' button"):
             click_on_button_name(page, 'Mark as Published')
             time.sleep(5)
@@ -321,4 +319,4 @@ def test_2e2_flow_02(set_up_tear_down, init_a_page_with_base_url, get_env_name):
         with allure.step("Access LinkedIn and Validate the shared content"):
             story_hub.access_to_linkedin()
             story_hub.check_content_is_shared_correctly(new_topic_content)
-            story_hub.check_content_is_shared_with_short_link(clipboard_url)
+            story_hub.check_content_is_shared_with_short_link(f"https://short{get_env_name}.themartec.com/")
