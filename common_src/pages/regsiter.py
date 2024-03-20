@@ -81,3 +81,8 @@ class RegisterPage:
         register_url = self.page.evaluate('() => document.URL')
         assert 'advocate/register' in register_url
 
+    def check_error_email_taken(self):
+        time.sleep(3)
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.locator("//p[.='Email already taken']")).to_be_visible(timeout=10000)
+
