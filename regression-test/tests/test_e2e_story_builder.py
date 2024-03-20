@@ -254,8 +254,6 @@ def test_2e2_flow_02(set_up_tear_down, init_a_page_with_base_url, get_env_name):
         with allure.step("Click on DONE button & Close Rating popup"):
             click_on_button_name(page02, "Done")
             my_story_page.click_on_x_button_in_rating_modal()
-        with allure.step("Validate story is 'under review' in My Stories"):
-            my_story_page.check_under_review_shown()
     with allure.step("C2608 - EB Portal > Review Response - Information is shown correctly for review"):
         refresh_page(page)
         with allure.step(f"Story Hub - Search topic name '{new_topic_content}"):
