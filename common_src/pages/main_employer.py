@@ -15,7 +15,7 @@ class MainEmployerPage:
         self.page.get_by_role("link", name="Creative Studio").click(timeout=10000)
 
     def access_content_recipes(self):
-        self.page.get_by_role("link", name="Content Recipes", exact=True).click()
+        self.page.locator("//a//p[.='Content Recipes']").click()
 
     def access_library_tab(self):
         self.page.get_by_role("link", name="Library", exact=True).click()
