@@ -23,6 +23,8 @@ jobs:
         uses: actions/setup-python@v4
       - name: Access Regression Test
         run: pwd
+      - name: install pytest allure
+        run: pip install allure-pytest
       - name: install allure
         run: npm install --save-dev allure-commandline  
       - name: Install dependencies pytest-playwright  
