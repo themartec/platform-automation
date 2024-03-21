@@ -43,7 +43,7 @@ jobs:
         run: pip install pandas
       - name: Run 'Content Recipes' Upload
         run: |
-           cd regression-test
+           pwd
            pytest tests/test_content_recipes.py --alluredir=allure-results --env_id=1 --clean-alluredir
       - name: Post to a Slack channel
         id: slack
