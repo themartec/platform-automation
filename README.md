@@ -1,7 +1,7 @@
 # platform-automation
 automation test for platform
 
-# Required Set Up
+# Required Set Upc
 - Playwright: 1.41.0
 - Python: 3.11.5
 - Pytest: 8.0.1
