@@ -16,13 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["pypy3.11"]
+        python-version: ["3.11"]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
       - name: Access Regression Test
-        run: cd regression-test
+        run: pwd
       - name: Run 'Content Recipes' Upload
         run: pytest tests/test_content_recipes.py --alluredir=allure-results --env_id=1 --clean-alluredir
       - name: Post to a Slack channel
