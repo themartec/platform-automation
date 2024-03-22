@@ -1,15 +1,15 @@
-   # This is a basic workflow to help you get started with Actions
+# This is a basic workflow to help you get started with Actions
 
 name: First Cron Job
-       # Controls when the workflow will run
-on: [push]
+# Controls when the workflow will run
+on: [ push ]
   # Triggers the workflow every 8 am
   # schedule:
-  #   - cron: "0 8 * * *"
+#   - cron: "0 8 * * *"
 defaults:
   run:
     working-directory: regression-test
-     # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+    # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "cron"
   cron:
@@ -17,20 +17,20 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: [ "3.11" ]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
-      - name: Checkout the repo 
-        uses: actions/checkout@v1    
+      - name: Checkout the repo
+        uses: actions/checkout@v1
       - name: Access Regression Test
         run: pwd
       - name: install pytest allure
         run: pip install allure-pytest
       - name: install allure
-        run: npm install --save-dev allure-commandline  
-      - name: Install dependencies pytest-playwright  
+        run: npm install --save-dev allure-commandline
+      - name: Install dependencies pytest-playwright
         run: python -m pip install --upgrade pip install pytest-playwright
       - name: Install playwirght browser
         run: playwright install
@@ -44,17 +44,53 @@ jobs:
         run: pip install pandas
       - name: Run 'Content Recipes' Upload
         run: |
-           pwd
-           pytest tests/test_content_recipes.py --alluredir=allure-results --env_id=1 --clean-alluredir
-      - name: Post to a Slack channel
-        id: slack
+          pwd
+          pytest tests/test_content_recipes.py --alluredir=allure-results --env_id=1 --clean-alluredir
+      - name: Load test report history
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build test report
+        uses: simple-elf/allure-report-action@v1.7
+        if: always()
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: build/allure-results
+
+      - name: Publish test report
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+      - id: slack
         uses: slackapi/slack-github-action@v1.25.0
         with:
-          # Slack channel id, channel name, or user id to post message.
-          # See also: https://api.slack.com/methods/chat.postMessage#channels
-          # You can pass in multiple channels to post to by providing a comma-delimited list of channel IDs.
-          channel-id: 'C06Q8HCJ692'
-          # For posting a simple plain text message
-          slack-message: "Health Check - Content Recipe: ${{ job.status }}}}"
+          # The following message update step does not accept a channel name.
+          # Setting a channel ID here for consistency is highly recommended.
+          channel-id: "C06Q8HCJ692"
+          payload: |
+            {
+              "text": "Automation Health Check",
+              "attachments": [
+                {
+                  "pretext": "Deployment started",
+                  "color": "dbab09",
+                  "fields": [
+                    {
+                      "title": "Status",
+                      "short": true,
+                      "value": "${{job.status}}"
+                    }
+                  ]
+                }
+              ]
+            }
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}  
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
