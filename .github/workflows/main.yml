@@ -45,7 +45,7 @@ jobs:
       - name: Run 'Content Recipes' Upload
         run: |
            pwd
-           pytest regression-test/tests/test_content_recipes.py --alluredir=allure-results --env_id=1 --clean-alluredir
+           pytest tests/test_content_recipes.py --alluredir=allure-results --env_id=1 --clean-alluredir
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.25.0
