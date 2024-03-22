@@ -45,7 +45,7 @@ jobs:
       - name: Run 'Content Recipes' Upload
         run: |
           pwd
-          pytest tests/test_content_recipes.py --alluredir=allure-results --env_id=1 --clean-alluredir
+          pytest --headed tests/test_content_recipes.py --alluredir=allure-results --env_id=1 --clean-alluredir
       - name: Load test report history
         uses: actions/checkout@v3
         if: always()
