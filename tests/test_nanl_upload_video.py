@@ -20,6 +20,51 @@ network_ref = "https://themartec.atlassian.net/wiki/spaces/AQ/pages/92045436/Net
 # Mbps -> byte/s
 network_conditions = {
     'Network As Default Setting': {
+    },
+    'US Avg Fixed Broadband Network Speed': {
+        'download': (237.41 * 125000),
+        'upload': (28.55 * 125000),
+        'latency': 13,
+    },
+    'US Avg Mobile Network Speed': {
+        'download': (115.40 * 125000),
+        'upload': (9.85 * 125000),
+        'latency': 29,
+    },
+    'UK Avg Fixed Broadband Network Speed': {
+        'download': (95.95 * 125000),
+        'upload': (26.17 * 125000),
+        'latency': 13,
+    },
+    'UK Avg Mobile Network Speed': {
+        'download': (52.33 * 125000),
+        'upload': (7.51 * 125000),
+        'latency': 34,
+    },
+    'AU Avg Fixed Broadband Network Speed': {
+        'download': (54.69 * 125000),
+        'upload': (18.39 * 125000),
+        'latency': 11,
+    },
+    'AU Avg Mobile Network Speed': {
+        'download': (82.88 * 125000),
+        'upload': (8.53 * 125000),
+        'latency': 22,
+    },
+    'VN Avg Fixed Broadband Network Speed': {
+        'download': (47.23 * 125000),
+        'upload': (19.67 * 125000),
+        'latency': 23,
+    },
+    'VN Avg Mobile Network Speed': {
+        'download': (108.22 * 125000),
+        'upload': (101.07 * 125000),
+        'latency': 3,
+    },
+    'Fast 3G Network Speed': {
+        'download': 180000,  # 1440 Kbps
+        'upload': 84375,  # 675 Kbps
+        'latency': 150,  # 150 ms
     }
 }
 
