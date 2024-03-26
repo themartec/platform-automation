@@ -1,15 +1,9 @@
-import random
-import string
 import time
 from datetime import date
-
 import allure
 import os
-import sys
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent.replace('regression-test', ''))
+from utils.init_env import init_url
 from common_src.pages.story_builder import StoryBuilderPage
 from common_src.pages.main_employer import MainEmployerPage
 from common_src.actions.common_action import get_clipboard_data, refresh_page, enter_text, click_on_button_name
@@ -143,7 +137,7 @@ def test_2e2_flow_01(set_up_tear_down, init_context):
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2608")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2677")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2678")
-def test_2e2_flow_02(set_up_tear_down, init_a_page_with_base_url, get_env_name):
+def test_2e2_flow_02(set_up_tear_down, init_a_page_with_base_url):
     page = set_up_tear_down
     random_num = get_random_string()
     tested_topic = 'Our Tech Stack'
@@ -271,7 +265,7 @@ def test_2e2_flow_02(set_up_tear_down, init_a_page_with_base_url, get_env_name):
         with allure.step("Create a tracking link"):
             story_hub.create_tracking_link('https://automation.com/martec')
         with allure.step("Validate generated tracking link successfully"):
-            story_hub.check_generated_tracking_link(get_env_name)
+            story_hub.check_generated_tracking_link()
             story_hub.close_tracking_link_modal()
     with allure.step("C2649 - EB Portal > Publish - Publish story with a tracking link"):
         with allure.step("Enter copied tracking link to 'PUBLISH LINK' field & Update Publish Date"):
@@ -306,4 +300,4 @@ def test_2e2_flow_02(set_up_tear_down, init_a_page_with_base_url, get_env_name):
         with allure.step("Access LinkedIn and Validate the shared content"):
             story_hub.access_to_linkedin()
             story_hub.check_content_is_shared_correctly(new_topic_content)
-            story_hub.check_content_is_shared_with_short_link(f"https://short{get_env_name}.themartec.com/")
+            story_hub.check_content_is_shared_with_short_link(init_url('SHORT_TRACKING_URL'))

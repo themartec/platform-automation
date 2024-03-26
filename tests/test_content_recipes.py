@@ -1,10 +1,7 @@
-import random
 import time
-
 import allure
 import os
 import sys
-
 import pytest
 
 current = os.path.dirname(os.path.realpath(__file__))
@@ -12,8 +9,6 @@ parent = os.path.dirname(current)
 sys.path.append(parent.replace('regression-test', ''))
 
 from common_src.pages.main_employer import MainEmployerPage
-from common_src.pages.employee_hub import EmployeeHubPage
-from common_src.pages.settings import SettingsPage
 from common_src.pages.login import LoginPage
 from common_src.pages.content_recipes import ContentRecipesPage
 from common_src.actions.common_action import click_on_button_name

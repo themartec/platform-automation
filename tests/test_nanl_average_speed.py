@@ -1,11 +1,8 @@
-from datetime import date, datetime
-
+from datetime import datetime
 import allure
 import os
 import sys
-
 import pandas as pd
-import pytest
 import wandb
 from dotenv import load_dotenv
 
