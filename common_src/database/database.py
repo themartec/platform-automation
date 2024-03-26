@@ -84,3 +84,8 @@ class MartecDatabase:
 
     def close(self):
         self.conn.close()
+
+    def make_adv_invitation_expire(self, email_address, date_tobe_expire):
+        query_str = f"UPDATE advocate_invites SET updated_at = '{date_tobe_expire} 08:00:00.000+00' WHERE email = '{email_address}'"
+        print(f"[DB CONN] ---> query_str: {query_str}")
+        do_query_without_fetch(self.conn, query_str)

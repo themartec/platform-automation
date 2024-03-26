@@ -13,18 +13,7 @@ from common_src.pages.main_employer import MainEmployerPage
 from common_src.pages.employee_hub import EmployeeHubPage
 from common_src.pages.regsiter import RegisterPage
 from common_src.pages.my_adv_stories import MyStoriesPage
-
-
-def generate_random_string():
-    # Generate the 3-digit number
-    number_part = random.randint(100, 999)  # Ensures 3 digits (inclusive)
-
-    # Generate 3 random lowercase letters
-    letters_part = ''.join(random.choices(string.ascii_lowercase, k=3))
-
-    # Combine the number and letters
-    random_string = str(number_part) + letters_part
-    return random_string
+from common_src.utils.dummy_data import get_random_string
 
 
 @allure.title("[C2574][1] Non-SSO - Copy Invite advocate magic link is worked as expected With An Existing Email")
@@ -94,7 +83,7 @@ def test_magic_link_02(set_up_tear_down, init_context):
     with allure.step("[New window] Fill in a valid and non-existing email and a correct format password, repeated "
                      "password"):
         register_page = RegisterPage(page02)
-        random_num = generate_random_string()
+        random_num = get_random_string()
         email = f"test.adv{random_num}@themartec.com"
         register_page.enter_register_data(email,
                                           os.getenv("PASSWORD_OF_NON_ISOLATED_ACC"))

@@ -4,7 +4,6 @@ import time
 from playwright.sync_api import expect
 
 from common_src.utils.Screenshot import Screenshot
-from common_src.pages.main_employer import MainEmployerPage
 
 
 class RegisterPage:
@@ -80,9 +79,20 @@ class RegisterPage:
         expect(self.page.locator(xpath)).to_be_visible()
         register_url = self.page.evaluate('() => document.URL')
         assert 'advocate/register' in register_url
+        expect(self.page.locator("//p[.='CREATE PASSWORD']/following-sibling::div/input")).to_be_visible()
+        expect(self.page.locator("//p[.='REPEAT PASSWORD']/following-sibling::div/input")).to_be_visible()
+        expect(self.page.locator("//p[contains(.,'I have read and agreed with the')]")).to_be_visible()
+        expect(self.page.locator("//p[.='Sign Up']")).to_be_visible()
 
     def check_error_email_taken(self):
         time.sleep(3)
         Screenshot(self.page).take_screenshot()
         expect(self.page.locator("//p[.='Email already taken']")).to_be_visible(timeout=10000)
 
+    def check_default_user_info_are_shown(self, email_address, company_name):
+        expect(self.page.locator(f"//*[@value='{email_address}']")).to_be_visible()
+        expect(self.page.locator(f"//*[@value='{company_name}']")).to_be_visible()
+
+    def check_expired_error_message(self):
+        expect(self.page.locator("//p[.='Invitation expired']")).to_be_visible(timeout=20000)
+        Screenshot(self.page).take_screenshot()

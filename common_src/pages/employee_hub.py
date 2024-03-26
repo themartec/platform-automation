@@ -1,9 +1,13 @@
+import json
+import logging
 import re
 import time
 
 from playwright.sync_api import expect
-
 from common_src.utils.Screenshot import Screenshot
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 class EmployeeHubPage:
@@ -37,7 +41,8 @@ class EmployeeHubPage:
         # Check Email
         expect(row_info.nth(5)).to_have_text(expected_account_info[4])
         # Check three dot button
-        expect(self.page.locator("//div[@class='tr rdt_TableRow' and contains(.,'Test ADV 01')]/div[7]//button[@type "
+        expect(self.page.locator(f"//div[@class='tr rdt_TableRow' and contains(.,'{expected_account_info[0]}')]/div["
+                                 f"7]//button[@type "
                                  "= 'button']")).to_be_visible()
         # Check avatar
         expect(self.page.get_by_role("cell", name=expected_account_info[0]).get_by_role("img")).to_be_visible()
@@ -47,7 +52,7 @@ class EmployeeHubPage:
         self.page.get_by_text("Filter").click()
 
     def click_on_apply_button(self):
-        self.page.get_by_role("button", name="Apply").click()
+        self.page.locator("//button[contains(.,'Apply')]").click()
 
     def click_on_clear_all_button(self):
         self.page.get_by_role("button", name="Clear All").click()
@@ -61,11 +66,35 @@ class EmployeeHubPage:
     def click_on_adv_name_in_list(self, adv_name):
         self.page.get_by_text(adv_name).click()
 
+    def perform_action_adv_with_info_and_return_name(self, button_type, prefix_name, status: str, order: int):
+        base_xpath = (f"(//div[contains(@class,'infinite-scroll-component')]/div[@role='row']"
+                      f"//p[.='{status}'])[{order}]/parent::div/parent::div")
+        logger.info(f"[Debug] base_xpath: {base_xpath}")
+        time.sleep(30)
+        if self.page.locator(base_xpath).count() > 0:
+            adv_name_xpath = f"{base_xpath}//div[contains(.,'{prefix_name}')]"
+            three_dot_xpath = f"{base_xpath}/div[last()]//button[contains(@class,'ellipsis-button')]"
+            button_xpath = f"{base_xpath}/div[last()]//button[.='{button_type}']"
+            time.sleep(5)
+            adv_full_name = self.page.locator(adv_name_xpath).nth(1).text_content()
+            logger.info(f"[Debug] button_xpath: {button_xpath}")
+            logger.info(f"[Debug] three_dot_xpath: {three_dot_xpath}")
+            self.page.locator(three_dot_xpath).hover()
+            self.page.locator(button_xpath).click()
+            time.sleep(10)
+            if 'delete' in button_type.lower():
+                self.page.get_by_role("button", name="OK").click()
+            return adv_full_name
+        else:
+            raise Exception(f"Advocate with status {status} is not exist")
+
     def click_on_adv_details_tab(self):
         self.page.get_by_text("Advocate Details").nth(1).click()
 
     def search_by_name(self, search_name):
         self.page.get_by_placeholder("Search for an advocate, a").fill(search_name)
+        self.page.get_by_placeholder("Search for an advocate, a").press("Enter")
+        time.sleep(3)
 
     def remove_filter(self):
         self.click_on_filter_button()
@@ -73,10 +102,21 @@ class EmployeeHubPage:
         self.click_on_apply_button()
         time.sleep(3)
 
-    def set_filter_by_list(self, info_list: list):
-        for status in info_list:
-            self.page.locator(f"//p[.='{status}']/preceding-sibling::span").click()
-            expect(self.page.locator(f"//p[.='{status}']/preceding-sibling::input")).to_be_checked()
+    def set_filter_by_list_employee_hub(self, filter_stype: str, info_list: list):
+        self.page.locator(f"//p[.='Employee Hub']/following-sibling::div/p[.='{filter_stype}']").click()
+        for info in info_list:
+            self.page.locator(f"//div[.='{info}']/span").click()
+            expect(self.page.locator(f"//div[.='{info}']/input")).to_be_checked()
+        if 'Select All' not in info_list:
+            expect(self.page.locator("form")).to_contain_text(str(len(info_list)))
+
+    def set_filter_by_list_custom_field(self, filter_stype: str, info_list: list):
+        self.page.locator(f"//p[.='Custom Fields']/following-sibling::div/p[.='{filter_stype}']").click()
+        for info in info_list:
+            self.page.locator(f"//div[.='{info}']/span").click()
+            expect(self.page.locator(f"//div[.='{info}']/input")).to_be_checked()
+        if 'Select All' not in info_list:
+            expect(self.page.locator("form")).to_contain_text(str(len(info_list)))
 
     def set_communities_with_element_in_order(self, order: int):
         # This feature has not be stable yet
@@ -88,7 +128,7 @@ class EmployeeHubPage:
         Screenshot(self.page).take_screenshot()
 
     def click_on_back_button_from_adv_details(self):
-        self.page.locator("div").filter(has_text=re.compile(r"^Advocate Details24$")).get_by_role("button").click()
+        self.page.locator("div").filter(has_text=re.compile(r"^Advocate Details$")).get_by_role("button").click()
 
     def hover_on_three_dot_button_and_delete(self):
         self.page.locator("//button[@type='button']").hover()
@@ -111,28 +151,46 @@ class EmployeeHubPage:
         return clipboard_text
 
     # --------------------------------------------------------------
-    def check_filter_is_correct(self, expected_tex_list: list):
+    def check_filter_is_correct(self, filtered_content: list):
         Screenshot(self.page).take_screenshot()
         xpath = f"//div[@class='tr rdt_TableRow']"
         time.sleep(5)
         row_info = self.page.locator(xpath)
+        logger.info(f" - filtered_content: {filtered_content}")
         for i in range(0, row_info.count()):
-            print(f"row_info.nth({i}): {row_info.nth(i).text_content()}")
+            logger.info(f"    - row_info.nth({i}): {row_info.nth(i).text_content()}")
             is_correct = False
-            for tx in expected_tex_list:
-                print(F"'{tx.lower()}: {tx.lower() in row_info.nth(i).text_content().lower()}'")
-                if tx.lower() in row_info.nth(i).text_content().lower():
+            current_row_content = row_info.nth(i).text_content().lower()
+            for tx in filtered_content:
+                tx = tx.lower()
+                logger.info(F"    - check row to contains '{tx}': {tx in current_row_content}'")
+                if tx in current_row_content:
                     is_correct = True
             assert is_correct is True
+
+    def check_content_is_existed_in_list(self, filter_content: str):
+        Screenshot(self.page).take_screenshot()
+        xpath = f"//div[@class='tr rdt_TableRow']"
+        time.sleep(5)
+        row_info = self.page.locator(xpath)
+        is_correct = False
+
+        for i in range(0, row_info.count()):
+            current_row_content = row_info.nth(i).text_content().lower()
+            if filter_content.lower() in current_row_content:
+                # logger.info(f"    - row_info.nth({i}): {row_info.nth(i).text_content()}")
+                # logger.info(F"    - check for '{content.lower()}: {content.lower() in current_row_content}'")
+                is_correct = True
+                logger.info(f"Found content '{filter_content}' at row {i}")
+                break
+        assert is_correct is True
 
     def check_star_is_shown(self, advocate_name):
         expect(self.page.get_by_role("cell", name=advocate_name).locator("path")).to_be_visible()
 
     def check_options_are_reset(self, status_name):
         Screenshot(self.page).take_screenshot()
-        expect(self.page.locator(f"//p[.='{status_name}']/preceding-sibling::input")).not_to_be_checked()
-        expect(self.page.locator(f"//p[.='Star Advocate']/preceding-sibling::input")).not_to_be_checked()
-        expect(self.page.locator(f"#react-select-33-option-0")).not_to_be_visible()
+        expect(self.page.locator(f"//div[.='{status_name}']/input")).not_to_be_checked()
 
     def check_filter_result_as_empty(self):
         expect(self.page.get_by_text("Click here to add an advocate")).to_be_visible()
@@ -175,3 +233,51 @@ class EmployeeHubPage:
     def check_new_template_is_shown_in_direct_invite(self, name):
         expect(self.page.get_by_text(name)).to_be_visible()
 
+    def check_adv_name_with_status_visible_in_list(self, status, adv_full_name):
+        expect(self.page.locator(f"//p[.='{status}']")).to_be_visible(timeout=60000)
+        Screenshot(self.page).take_screenshot()
+        expect(self.page.get_by_text(adv_full_name)).to_be_visible()
+
+    def filter_single_by_status(self, status):
+        self.click_on_filter_button()
+        (self.page.locator("div").filter(has_text=re.compile(r"^Advocate Status$"))
+         .get_by_role("paragraph").click())
+        self.page.get_by_text(status).click()
+        self.page.get_by_role("button", name="Apply 1 Filters").click()
+
+    def enter_email_address_direct_invite(self, email_address):
+        self.page.get_by_placeholder("Email").fill(email_address)
+        Screenshot(self.page).take_screenshot()
+        self.page.get_by_placeholder("Email").press("Enter")
+
+    def click_on_send_invite_in_direct_invite(self):
+        with self.page.expect_response("**/people-invitation/send-email") as response_info:
+            self.page.get_by_role("button", name="Send invite").click()
+        response = json.loads(response_info.value.body())
+        advocateInviteLink = response['data']['advocateInviteLink'][0]
+        logger.info(f" - response: {response}")
+        logger.info(f" - response advocateInviteLink: {advocateInviteLink}")
+        return advocateInviteLink
+
+    def resend_invite(self):
+        self.page.locator("//button[@type='button']").hover()
+        self.page.get_by_role("button", name="Resend Invite").click()
+        time.sleep(5)
+
+    def check_filter_with_selecting_all(self):
+        Screenshot(self.page).take_screenshot()
+        xpath = "//div[.='Select All']/following-sibling::div//input"
+        element_list = self.page.locator(xpath)
+        # logger.info(f"element_list: {element_list.count()}")
+        for i in range(1, element_list.count()):
+            txt = self.page.locator(f"(//div[.='Select All']/following-sibling::div//div)[{i}]").text_content()
+            # logger.info(f"text: {txt}")
+            expect(self.page.locator(f"({xpath})[{i}]")).to_be_checked()
+
+    def search_in_filter(self, search_content):
+        self.page.get_by_placeholder("Search Filter…").fill(search_content)
+
+    def check_search_in_filter(self, filter_section, search_content):
+        expect(self.page.locator("div").filter(has_text=re.compile(fr"^{search_content}$"))).to_be_visible()
+        expect(self.page.locator("#modal").get_by_text(filter_section)).to_be_visible()
+        expect(self.page.get_by_text(search_content).nth(1)).to_be_visible()

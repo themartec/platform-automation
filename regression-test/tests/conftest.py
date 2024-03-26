@@ -81,6 +81,8 @@ def set_up_tear_down(playwright: Playwright, request) -> None:
         context = browser.new_context()
     context.grant_permissions(['clipboard-read', 'clipboard-write'])
     page = context.new_page()
+    page.on("request", lambda request: None)
+    page.on("response", lambda response: None)
     page.goto(url)
     time.sleep(5)
     yield page
@@ -189,7 +191,7 @@ def init_context(playwright: Playwright, request) -> BrowserContext:
     # test_env_id = os.getenv('TEST_ENV')
     url = match_env(test_env_id)
     print(f"TEST ENV: {url}")
-    browser = playwright.chromium.launch(headless=False, slow_mo=1000)
+    browser = playwright.chromium.launch(headless=False, slow_mo=1000, channel="chrome")
     context = browser.new_context()
     yield context
 
@@ -208,7 +210,7 @@ def init_a_page_with_base_url(playwright: Playwright, request) -> BrowserContext
     # test_env_id = os.getenv('TEST_ENV')
     url = match_env(test_env_id)
     print(f"TEST ENV: {url}")
-    browser = playwright.chromium.launch(headless=False, slow_mo=1000)
+    browser = playwright.chromium.launch(headless=False, slow_mo=1000, channel="chrome")
     context = browser.new_context()
     page = context.new_page()
     page.goto(url)

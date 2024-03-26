@@ -17,18 +17,7 @@ from common_src.pages.regsiter import RegisterPage
 from common_src.pages.story_hub import StoryHubPage
 from common_src.pages.login import LoginPage
 from common_src.pages.my_adv_stories import MyStoriesPage
-
-
-def generate_random_string():
-    # Generate the 3-digit number
-    number_part = random.randint(100, 999)  # Ensures 3 digits (inclusive)
-
-    # Generate 3 random lowercase letters
-    letters_part = ''.join(random.choices(string.ascii_lowercase, k=3))
-
-    # Combine the number and letters
-    random_string = str(number_part) + letters_part
-    return random_string
+from common_src.utils.dummy_data import get_random_string
 
 
 @allure.title("End To End Test > Employer branding > Individual Written - Submit a new custom topic with generated "
@@ -40,7 +29,7 @@ def generate_random_string():
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2675")
 def test_2e2_flow_01(set_up_tear_down, init_context):
     page = set_up_tear_down
-    random_num = generate_random_string()
+    random_num = get_random_string()
     with allure.step("C2598 - Employer branding > Individual Written - Validate submitting a custom topic"):
         with allure.step("Access Story Builder tab"):
             MainEmployerPage(page).access_story_builder_tab()
@@ -156,7 +145,7 @@ def test_2e2_flow_01(set_up_tear_down, init_context):
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2678")
 def test_2e2_flow_02(set_up_tear_down, init_a_page_with_base_url, get_env_name):
     page = set_up_tear_down
-    random_num = generate_random_string()
+    random_num = get_random_string()
     tested_topic = 'Our Tech Stack'
     with allure.step("C2649 - EB Portal - Validate publish a new story with a custom question from Talent Acquisition "
                      "category"):

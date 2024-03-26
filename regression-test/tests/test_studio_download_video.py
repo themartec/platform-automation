@@ -97,6 +97,7 @@ def test_studio_export_video_1080(set_up_tear_down, get_base_studio_url,
 @allure.description("")
 @allure.tag("C2566")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2566")
+@allure.tag("db_required")
 def test_studio_save_to_story_video_720(set_up_tear_down, get_base_studio_url,
                                         get_base_url,
                                         get_content_id,
@@ -133,6 +134,7 @@ def test_studio_save_to_story_video_720(set_up_tear_down, get_base_studio_url,
 @allure.description("")
 @allure.tag("C2567")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2567")
+@allure.tag("db_required")
 def test_studio_save_to_story_video_1080(set_up_tear_down,
                                          get_base_studio_url,
                                          get_base_url,

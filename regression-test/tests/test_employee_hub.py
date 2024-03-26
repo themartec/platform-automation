@@ -1,10 +1,10 @@
-import random
+import time
+from datetime import date, timedelta
 
 import allure
 import os
 import sys
 
-import pytest
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -14,6 +14,9 @@ from common_src.pages.main_employer import MainEmployerPage
 from common_src.pages.employee_hub import EmployeeHubPage
 from common_src.pages.settings import SettingsPage
 from common_src.pages.login import LoginPage
+from common_src.pages.regsiter import RegisterPage
+from common_src.database.database import MartecDatabase
+from common_src.utils.dummy_data import get_dummy_string_for_email_address, get_random_string
 
 
 @allure.title("[C2578] Employee Hub - Account list displays correct accounts & info")
@@ -46,7 +49,7 @@ def test_add_new_advocate_template(set_up_tear_down, init_a_page_with_base_url):
         setting_page.click_on_option("Add email template")
         with allure.step("Validate Default Keywords In Template"):
             setting_page.check_default_keywords()
-            number_part = random.randint(100, 999)
+            number_part = get_random_string()
             adv_template_name = f"Automation Advocate Template {number_part}"
         with allure.step(f"Naming for template As '{adv_template_name}' & Write the template body"):
             setting_page.enter_template_name(adv_template_name)
@@ -103,9 +106,9 @@ def test_add_new_advocate_template(set_up_tear_down, init_a_page_with_base_url):
         setting_page.delete_invite_adv(adv_template_name)
 
 
-@pytest.mark.skip(reason="Feature is being updated")
-@allure.title("[C2580][1] Employee Hub - Filter is worked as expected in case applying status")
-@allure.description(f"Filter By Status As Active, Deleted, Invitation Sent, Bench")
+# @pytest.mark.skip(reason="Feature is being updated")
+@allure.title("[C2580][1] Employee Hub - Filter is worked as expected in case applying adv status")
+@allure.description(f"Filter By Status As Active, Deleted, Invitation Sent, Bench & Clear All")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2580")
 def test_filter_01(set_up_tear_down):
     page = set_up_tear_down
@@ -114,43 +117,174 @@ def test_filter_01(set_up_tear_down):
         MainEmployerPage(page).access_employee_hub()
     with allure.step("[1] Validate Filter By Combined Status As 'Active' And 'Bench'"):
         employee_page.click_on_filter_button()
-        employee_page.set_filter_by_list(['Active', 'Bench'])
+        employee_page.set_filter_by_list_employee_hub('Advocate Status', ['Active', 'Bench'])
         employee_page.click_on_apply_button()
+        employee_page.check_filter_is_correct(['Active', 'Bench'])
         employee_page.check_filter_is_correct(['Active', 'Bench'])
     with allure.step("Clear All Filter"):
         employee_page.remove_filter()
     with allure.step("[2] Validate Filter By Combined Status As 'Delete' and 'Invitation Sent'"):
         employee_page.click_on_filter_button()
-        employee_page.set_filter_by_list(['Deleted', 'Invitation Sent'])
+        employee_page.set_filter_by_list_employee_hub('Advocate Status', ['Deleted', 'Invitation Sent'])
         employee_page.click_on_apply_button()
         employee_page.check_filter_is_correct(['Deleted', 'Invitation Sent'])
-    with allure.step("[5]Clear All Filter & Validate checked option are reset"):
+        employee_page.remove_filter()
+    with allure.step("[3] Validate filter by 'Select All'"):
+        employee_page.click_on_filter_button()
+        employee_page.set_filter_by_list_employee_hub('Advocate Status', ['Select All'])
+        employee_page.check_filter_with_selecting_all()
+        employee_page.click_on_apply_button()
+        # check one of status is shown (not cover all for performance)
+        employee_page.check_filter_is_correct(['Invitation Sent', 'Bench', 'Active', 'Deleted'])
+    with allure.step("[4] Clear All Filter & Validate checked options are reset"):
         employee_page.click_on_filter_button()
         employee_page.click_on_clear_all_button()
-        employee_page.check_options_are_reset('Active')
+        employee_page.check_options_are_reset('Deleted')
+        employee_page.check_options_are_reset('Select All')
         employee_page.click_on_apply_button()
 
 
-@pytest.mark.skip(reason="Feature is being updated")
-@allure.title("[C2580][2] Employee Hub - Filter is worked in case mixed options (status & star advocate)")
-@allure.description(f"Mix between status & star advocate")
+# @pytest.mark.skip(reason="Feature is being updated")
+@allure.title("[C2580][2] Employee Hub - Filter is worked in case mixed options (adv status & adv type), "
+              "filter by custom field")
+@allure.description(f"")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2580")
 def test_filter_02(set_up_tear_down):
     page = set_up_tear_down
     employee_page = EmployeeHubPage(page)
     with allure.step("Access Employee Hub"):
         MainEmployerPage(page).access_employee_hub()
-    with allure.step("[3] Validate Filter By Status='Active' And ADVOCATE TYPE='Starred Advocate'"):
+    with allure.step("[1] Validate Mixed Filter By Adv Status='Active' And Adv Type='Starred Advocate'"):
         employee_page.click_on_filter_button()
-        employee_page.set_filter_by_list(['Active'])
-        employee_page.set_filter_by_list(['Star Advocate'])
+        employee_page.set_filter_by_list_employee_hub('Advocate Status', ['Active'])
+        employee_page.set_filter_by_list_employee_hub('Advocate Type', ['Star Advocate'])
         employee_page.click_on_apply_button()
         employee_page.check_filter_is_correct(['Active'])
         employee_page.check_star_is_shown("Test ADV 02")
     with allure.step("Clear All Filter"):
         employee_page.remove_filter()
-    with allure.step("[4] Validate Filter By Status='Invitation Pending' And Unchecked ADVOCATE TYPE"):
+    with allure.step("[2] Validate Custom Field Filter - Department Field"):
         employee_page.click_on_filter_button()
-        employee_page.set_filter_by_list(['Invitation Pending'])
+        employee_page.set_filter_by_list_custom_field('Department', ['Accounting'])
         employee_page.click_on_apply_button()
-        employee_page.check_filter_result_as_empty()
+        employee_page.check_content_is_existed_in_list('Test ADV 01')
+        employee_page.check_content_is_existed_in_list('Test ADV 05')
+    with allure.step("Clear All Filter"):
+        employee_page.remove_filter()
+    with allure.step("[3] Validate Searching Field in Filter"):
+        employee_page.click_on_filter_button()
+        search_content = "Community"
+        employee_page.search_in_filter(search_content)
+        employee_page.check_search_in_filter("Employee Hub", search_content)
+
+
+@allure.title("[C2579][1] Delete Advocate & Single Filter By Status (DELETED)")
+@allure.description(f"")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2579")
+def test_account_action_delete(set_up_tear_down):
+    page = set_up_tear_down
+    with allure.step("Access Employee Hub"):
+        MainEmployerPage(page).access_employee_hub()
+        employee_page = EmployeeHubPage(page)
+    with allure.step("Validate Delete option"):
+        employee_page.search_by_name('Story Dummy')
+        deleted_adv_name = employee_page.perform_action_adv_with_info_and_return_name('Delete',
+                                                                                      'Story Dummy',
+                                                                                      'active',
+                                                                                      2)
+        employee_page.search_by_name(deleted_adv_name)
+        employee_page.filter_single_by_status("Deleted")
+        employee_page.check_adv_name_with_status_visible_in_list('deleted', deleted_adv_name)
+
+
+@allure.title("[C2579][2] Bench Advocate & Single Filter By Status ")
+@allure.description(f"")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2579")
+def test_account_action_bench(set_up_tear_down, init_a_page_with_base_url):
+    page = set_up_tear_down
+    with allure.step("Access Employee Hub"):
+        MainEmployerPage(page).access_employee_hub()
+        employee_page = EmployeeHubPage(page)
+    with allure.step("Validate Bench option"):
+        to_bench_adv_name = 'Test Adv To Bench'
+        with allure.step(f"Search {to_bench_adv_name}"):
+            employee_page.search_by_name(to_bench_adv_name)
+
+        with allure.step("Click on 'Bench' option to advocate of status active"):
+            to_bench_adv_name = employee_page.perform_action_adv_with_info_and_return_name('Bench',
+                                                                                           to_bench_adv_name,
+                                                                                           'active',
+                                                                                           1)
+
+        with allure.step("Validate adv is now in bench status"):
+            employee_page.check_adv_name_with_status_visible_in_list('bench', to_bench_adv_name)
+        with allure.step("Validate bench adv can not login to portal anymore"):
+            page02 = init_a_page_with_base_url
+            login_page_02 = LoginPage(page02)
+            login_page_02.enter_username_password('test.adv965scw@themartec.com',
+                                                  os.getenv('PASSWORD_OF_NON_ISOLATED_ACC'))
+            login_page_02.check_login_is_unsuccessful_as_wrong_username()
+    with allure.step("Validate be able to 'Un-Bench' for Advocate & Advocate login is successful"):
+        with allure.step("Status advocate will change to active after performing unbench action"):
+            employee_page.perform_action_adv_with_info_and_return_name('Unbench',
+                                                                       to_bench_adv_name,
+                                                                       'bench',
+                                                                       1)
+            employee_page.check_adv_name_with_status_visible_in_list('active', to_bench_adv_name)
+        with allure.step("Advocate can log in BA portal again"):
+            login_page_02.enter_username_password('test.adv965scw@themartec.com',
+                                                  os.getenv('PASSWORD_OF_NON_ISOLATED_ACC'))
+            login_page_02.check_login_successfully_for_ba_portal()
+
+
+@allure.title("[C2680] Direct Invite - Resend Invite & Check For Expired, Renewed Token Event")
+@allure.description(f"")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2680")
+@allure.tag("db_required")
+def test_account_direct_invite(set_up_tear_down, init_context, get_env_id):
+    page = set_up_tear_down
+    with allure.step("Access Employee Hub"):
+        MainEmployerPage(page).access_employee_hub()
+        employee_page = EmployeeHubPage(page)
+    with allure.step("Access Direct Invite page"):
+        employee_page.click_on_active_people_button()
+        employee_page.click_on_direct_invite_option()
+        email_address = get_dummy_string_for_email_address('eh')
+    with allure.step(f"Enter dummy email address '{email_address}'"):
+        employee_page.enter_email_address_direct_invite(email_address)
+        invitation_link = employee_page.click_on_send_invite_in_direct_invite()
+        assert invitation_link != ''
+        print(f"invitation_link: {invitation_link}")
+    with allure.step(f"Navigate to invitation link in new incognito tab, invitation_link: {invitation_link}"):
+        page02 = init_context.new_page()
+        page02.goto(invitation_link)
+        time.sleep(5)
+    with allure.step("Validate invitation link can be opened successfully"):
+        with allure.step("Invited email address, company name is auto populated"):
+            register_page_02 = RegisterPage(page02)
+            register_page_02.check_default_user_info_are_shown(email_address,
+                                                               'The Martec')
+        with allure.step("UI elements are shown completely"):
+            register_page_02.check_register_page_shown()
+    with allure.step("Set up for expired event of invitation link"):
+        conn = MartecDatabase(get_env_id)
+        today_date = date.today()
+        expired_date = today_date - timedelta(days=15)
+        print(f"expired_date: {expired_date}")
+        conn.make_adv_invitation_expire(email_address,
+                                        date_tobe_expire=expired_date)
+    with allure.step(f"With expired date={expired_date}, validate invitation link will be expired"):
+        with allure.step("Navigate to invitation link"):
+            page02.goto(invitation_link)
+            register_page_02.check_expired_error_message()
+    with allure.step("Resend invite to advocate"):
+        MainEmployerPage(page).access_employee_hub()
+        employee_page.search_by_name(email_address)
+        employee_page.resend_invite()
+    with allure.step("Try open invitation link again"):
+        page02.goto(invitation_link)
+        time.sleep(5)
+    with allure.step("Validate invitation link is worked"):
+        register_page_02 = RegisterPage(page02)
+        register_page_02.check_default_user_info_are_shown(email_address,
+                                                           'The Martec')
