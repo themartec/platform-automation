@@ -1,5 +1,3 @@
-import random
-import string
 import time
 
 import allure
@@ -42,6 +40,7 @@ def test_magic_link_01(set_up_tear_down, init_context):
                                           os.getenv("PASSWORD_OF_NON_ISOLATED_ACC"))
         register_page.check_on_agreement_checkbox()
         register_page.click_on_sign_up_button()
+        time.sleep(3)
     with allure.step("[New window] At 'Set up your profile' page, click on CREATE PROFILE button"
                      " without entering to any textbox"):
         register_page.click_on_create_profile_button()

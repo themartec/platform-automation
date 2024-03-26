@@ -2,9 +2,6 @@ import csv
 import os
 import shutil
 
-FILE_NAME_01 = "upload_history.csv"
-FILE_NAME_02 = "avg_speed.csv"
-
 
 def remove_folder(dir_to_remove):
     shutil.rmtree(dir_to_remove)
@@ -24,7 +21,3 @@ def init_csv_file_with_column(column_name, filename):
         csvwriter.writerow(column_name)
 
 
-remove_file(FILE_NAME_01)
-remove_file(FILE_NAME_02)
-# remove_folder('allure-results')
-init_csv_file_with_column(["Time", "Network Config", "Upload Speed"], "upload_history.csv")

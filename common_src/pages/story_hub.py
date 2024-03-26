@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 
@@ -5,6 +6,10 @@ from playwright.sync_api import expect
 import re
 
 from common_src.utils.Screenshot import Screenshot
+from utils.init_env import init_url
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 class StoryHubPage:
@@ -55,7 +60,7 @@ class StoryHubPage:
 
         for i in range(1, count):
             content = list_elements.nth(i).text_content()
-            print(f"content: {content} at i={i}")
+            logger.info(f"content: {content} at i={i}")
             if 'add section' not in content.lower():
                 list_content.append(content)
 
@@ -93,17 +98,17 @@ class StoryHubPage:
         for i in range(list_elements.count()):
             link = list_elements.nth(i).get_attribute('src')
             media_link.append(link)
-        print(f"media_link: {media_link}")
+        logger.info(f"media_link: {media_link}")
         return media_link
 
     def check_story_info_is_shown_in_list(self, story_info):
         Screenshot(self.page).take_screenshot()
         elements = self.page.locator("//div[@role='row']")
         is_shown = False
-        print(f"story_info: {story_info}")
+        logger.info(f"story_info: {story_info}")
         for i in range(elements.count()):
             text_row = elements.nth(i).text_content()
-            print(f"text_row: {text_row}")
+            logger.info(f"text_row: {text_row}")
             if story_info.lower() in text_row.lower():
                 is_shown = True
                 assert is_shown is True
@@ -129,7 +134,7 @@ class StoryHubPage:
 
         expect(self.page.get_by_text(adv_comment)).to_be_visible()
         format_answer = ai_answer.replace('\n', ' ')
-        print(f"format_answer: {format_answer}")
+        logger.info(f"format_answer: {format_answer}")
         expect(self.page.get_by_placeholder("Add an answer")).to_contain_text(format_answer)
 
     def check_story_title_shown_in_publish_screen(self, topic):
@@ -141,14 +146,14 @@ class StoryHubPage:
         self.page.get_by_text(track_url, exact=True).click()
         self.page.get_by_role("button", name="generate tracking link").click()
 
-    def check_generated_tracking_link(self, test_env):
+    def check_generated_tracking_link(self):
         Screenshot(self.page).take_screenshot()
         # "https://shortstaging.themartec.com/L9EVF"
         xpath = "//div[.='Create Tracking Link']/following-sibling::div//input"
         cur_url = self.page.locator(xpath).input_value()
-        print(f"cur_url: {cur_url}")
-
-        assert f"https://short{test_env}.themartec.com/" in cur_url
+        logger.info(f"cur_url: {cur_url}")
+        tracking_url = init_url('SHORT_TRACKING_URL')
+        assert tracking_url in cur_url
 
     def enter_publish_link(self, publish_link):
         self.page.get_by_placeholder("Enter link").fill(publish_link)
@@ -196,19 +201,13 @@ class StoryHubPage:
         self.page.locator("#calendar-portal").get_by_role("img").click()
         current_year_month = self.page.locator("//div[@class='react-datepicker__month-container']//p").text_content()
         today_year_month = str(month_name) + ' ' + str(today_year)
-        print(f"    - current_year_month: {current_year_month}, today_year_month: {today_year_month}")
+        logger.info(f"    - current_year_month: {current_year_month}, today_year_month: {today_year_month}")
         if current_year_month != today_year_month:
             self.page.locator("#calendar-portal button").first.click()
-        self.page.locator(f"//div[@class='react-datepicker__week']/div[.='{today_day}']").click()
+        self.page.locator(f"//div[@class='react-datepicker__week']/div[not(contains(@class,'outside-month')) and "
+                          f"text()="
+                          f"'{today_day}']").click()
 
-    # def check_hashtag(self):
-    #     before_content = self.page.locator("//textarea").text_content()
-    #     print(f"before_content: {before_content}")
-    #     self.page.locator("//button[.='Add Hashtag']").click()
-    #     time.sleep(120)
-    #     after_content = self.page.locator("//textarea").text_content()
-    #     print(f"after_content: {after_content}")
-    #     assert f"{before_content} #" == after_content
     def click_on_published_tab(self):
         self.page.locator("//p[.='Published']").click()
 
@@ -221,5 +220,3 @@ class StoryHubPage:
 
     def close_tracking_link_modal(self):
         self.page.locator("#modal").get_by_role("button").first.click()
-
-

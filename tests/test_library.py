@@ -1,12 +1,9 @@
-import time
-
 import allure
 import os
-import sys
-
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent.replace('regression-test', ''))
+# import sys
+# current = os.path.dirname(os.path.realpath(__file__))
+# parent = os.path.dirname(current)
+# sys.path.append(parent.replace('regression-test', ''))
 
 from common_src.pages.main_employer import MainEmployerPage
 from common_src.pages.library import LibraryPage
@@ -22,8 +19,9 @@ def test_video_info(set_up_tear_down) -> None:
         MainEmployerPage(page).access_library_tab()
     with allure.step("Story Video should have correct title & related question"):
         library_page = LibraryPage(page)
-        library_page.check_header_title_is_correct(
-            "[DOWNLOAD_VIDEO] Automation Blog To Test Download Video (Don't remove)")
+        story_name = "[DOWNLOAD_VIDEO] Automation Blog To Test Download Video (Don't remove)"
+        library_page.search_for_story(story_name)
+        library_page.check_header_title_is_correct(story_name)
         library_page.check_question_is_correctly_shown(
             "How do you stay motivated and productive while working remotely?")
     with allure.step("Story Video should have RAW status, Video Type"):
@@ -40,6 +38,8 @@ def test_video_edit_icon(set_up_tear_down) -> None:
         MainEmployerPage(page).access_library_tab()
     with allure.step("Story Video should have Edit icon in thumbnail"):
         library_page = LibraryPage(page)
+        story_name = "[DOWNLOAD_VIDEO] Automation Blog To Test Download Video (Don't remove)"
+        library_page.search_for_story(story_name)
         library_page.check_edit_icon_in_thumbnail()
     with allure.step("Click on Edit button will navigate user to Edit Video page"):
         edit_page = library_page.click_on_edit_button_of_vide_name("How do you stay motivated and")
@@ -64,9 +64,12 @@ def test_video_download_icon(set_up_tear_down) -> None:
         MainEmployerPage(page).access_library_tab()
     with allure.step("Story Video should have Download icon in thumbnail"):
         library_page = LibraryPage(page)
+        story_name = "[DOWNLOAD_VIDEO] Automation Blog To Test Download Video (Don't remove)"
+        library_page.search_for_story(story_name)
         video_name = "How do you stay motivated and"
         library_page.check_download_icon_in_thumbnail_of_video(video_name)
     with allure.step("Click on Download button will be able to download video"):
         downloaded_file = library_page.click_on_download_button_in_thumbnail_of_video(video_name)
         is_download_ok = library_page.check_file_is_downloaded_successfully(downloaded_file)
         assert is_download_ok is True
+        os.remove(file_name)

@@ -3,27 +3,24 @@ import os
 
 from dotenv import load_dotenv
 
+from utils.init_env import init_url
+
 load_dotenv()
 
 
-def get_end_point(env_id):
-    if env_id == '2':
-        return "apidev-db.cudhblxsw6t8.us-west-1.rds.amazonaws.com"
-    elif env_id == '1':
-        return "apistaging-db.cudhblxsw6t8.us-west-1.rds.amazonaws.com"
-    else:
-        return ""
+def get_end_point():
+    return init_url('DB_MARTEC_ENDPOINT')
 
 
-def get_pass(env_id):
-    if env_id == '2':
-        print(f"PASS: {os.getenv('DB_PASS_DEV')}")
+def get_pass(env_name):
+    if 'dev' in env_name:
+        # print(f"PASS: {os.getenv('DB_PASS_DEV')}")
         return os.getenv('DB_PASS_DEV')
-    elif env_id == '1':
-        print(f"PASS: {os.getenv('DB_PASS_STG')}")
+    elif 'staging' in env_name:
+        # print(f"PASS: {os.getenv('DB_PASS_STG')}")
         return os.getenv('DB_PASS_STG')
     else:
-        return ""
+        raise Exception("Un-defined password")
 
 
 def do_query(conn, query_string):
@@ -42,12 +39,12 @@ def do_query_without_fetch(conn, query_string):
 
 class MartecDatabase:
 
-    def __init__(self, env_test_id):
+    def __init__(self):
         self.conn = psycopg2.connect(
             database="themartec",
             user='themartec',
-            password=get_pass(env_test_id),
-            host=get_end_point(env_test_id),
+            password=get_pass(os.getenv('test_env')),
+            host=get_end_point(),
             port='5432'
         )
 

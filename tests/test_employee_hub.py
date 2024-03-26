@@ -3,12 +3,6 @@ from datetime import date, timedelta
 
 import allure
 import os
-import sys
-
-
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent.replace('regression-test', ''))
 
 from common_src.pages.main_employer import MainEmployerPage
 from common_src.pages.employee_hub import EmployeeHubPage
@@ -76,8 +70,10 @@ def test_add_new_advocate_template(set_up_tear_down, init_a_page_with_base_url):
             employee_page.check_body_email_template(body)
     with allure.step("[C2581] Validate A New Template Can Be Created From Direct Invite View"):
         with allure.step("Update Current Template & Check Its Affection To Current View"):
-            employee_page.update_template_with_content(body, "This is new update from Automation - " + body)
+            employee_page.update_template_with_content(body, number_part + " This is new update from Automation - " +
+                                                       body)
             employee_page.click_on_save_template_button()
+            time.sleep(20)
             new_template_name = adv_template_name + " [New]"
             employee_page.enter_new_template_name(new_template_name)
             employee_page.check_new_template_is_shown_in_direct_invite(new_template_name)
@@ -240,9 +236,9 @@ def test_account_action_bench(set_up_tear_down, init_a_page_with_base_url):
 @allure.title("[C2680] Direct Invite - Resend Invite & Check For Expired, Renewed Token Event")
 @allure.description(f"")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2680")
-@allure.tag("db_required")
-def test_account_direct_invite(set_up_tear_down, init_context, get_env_id):
-    page = set_up_tear_down
+@allure.tag("db_required", "network_listener")
+def test_account_direct_invite(set_up_tear_down_with_full_configure, init_context):
+    page = set_up_tear_down_with_full_configure
     with allure.step("Access Employee Hub"):
         MainEmployerPage(page).access_employee_hub()
         employee_page = EmployeeHubPage(page)
@@ -267,7 +263,7 @@ def test_account_direct_invite(set_up_tear_down, init_context, get_env_id):
         with allure.step("UI elements are shown completely"):
             register_page_02.check_register_page_shown()
     with allure.step("Set up for expired event of invitation link"):
-        conn = MartecDatabase(get_env_id)
+        conn = MartecDatabase()
         today_date = date.today()
         expired_date = today_date - timedelta(days=15)
         print(f"expired_date: {expired_date}")

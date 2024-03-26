@@ -14,3 +14,4 @@ __pycache__
 /api-test/allure_results/
 /*.pyc
 /regression-test/wandb/
+/allure-results/

@@ -1,21 +1,15 @@
 import csv
 import logging
 import time
-from datetime import date, datetime
-
 import allure
 import os
-import sys
-
 import pandas as pd
 import pytest
-from playwright.sync_api import sync_playwright, BrowserContext
-
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent.replace('regression-test', ''))
+from datetime import datetime
+from playwright.sync_api import BrowserContext
 
 from common_src.pages.nanl import NoAppNoLoginPage
+from utils.setup_before_test_nanl_upload import remove_file, init_csv_file_with_column
 
 COMMON_STEP_NAME_01 = "Access Invited Collecttion Link"
 cwd = os.getcwd()
@@ -96,14 +90,7 @@ def write_data(filename, data_row):
         csvwriter.writerow(data_row)
 
 
-def calculate_avg_speed(file_name, env_id):
-    if env_id == '1':
-        env_name = "STAGING"
-    elif env_id == "2":
-        env_name = "DEV"
-    else:
-        env_name = "PROD"
-
+def calculate_avg_speed(file_name, env_name):
     with open(os.getenv("SPEED_PERFORMANCE_FILE"), 'w') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(["Test Env", "Time", "Network Config", "Average Upload Speed"])
@@ -142,12 +129,18 @@ def calculate_avg_speed(file_name, env_id):
 @allure.description(f"Ref: {network_ref}")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2645")
 @pytest.mark.parametrize("network_condition", network_conditions.keys())
-def test_nanl_upload_video_under_network_conditions(get_env_id, set_up_tear_down_with_network_profile,
+def test_nanl_upload_video_under_network_conditions(get_env, set_up_tear_down_with_network_profile,
                                                     get_base_url,
                                                     network_condition
                                                     ):
     logger.info(f"network_condition: {network_condition}")
     logger.info(f"Details:\n{network_conditions[network_condition]}")
+    FILE_NAME_01 = "upload_history.csv"
+    FILE_NAME_02 = "avg_speed.csv"
+    remove_file(FILE_NAME_01)
+    remove_file(FILE_NAME_02)
+    init_csv_file_with_column(["Time", "Network Config", "Upload Speed"], "upload_history.csv")
+
     with allure.step(f"Start browser with configure of {network_condition}"):
         context = set_up_tear_down_with_network_profile
         page = init_network_config(context, network_condition)
@@ -169,8 +162,8 @@ def test_nanl_upload_video_under_network_conditions(get_env_id, set_up_tear_down
         cur_time = datetime.now().strftime("%Y-%m-%d %H:%M")
         print(f"[Write Data] cur_time: {cur_time}, network_condition: {network_condition}, upload_time: {upload_time}")
         write_data("upload_history.csv", [cur_time, network_condition, upload_time])
-        calculate_avg_speed("upload_history.csv", get_env_id)
+        calculate_avg_speed("upload_history.csv", get_env)
 
     with allure.step("Validate Uploaded Time Should Be Less Than 120 seconds"):
-        logger.info(f"Upload Time: {upload_time} (-1 means it took more than 2 minutes)")
+        print(f"Upload Time: {upload_time} (-1 means it took more than 2 minutes)")
         assert -1 < upload_time < 61
