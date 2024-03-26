@@ -1,21 +1,15 @@
 import csv
 import logging
 import time
-from datetime import datetime
-
 import allure
 import os
-import sys
-
 import pandas as pd
 import pytest
+from datetime import datetime
 from playwright.sync_api import BrowserContext
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent.replace('regression-test', ''))
-
 from common_src.pages.nanl import NoAppNoLoginPage
+from utils.setup_before_test_nanl_upload import remove_file, init_csv_file_with_column
 
 COMMON_STEP_NAME_01 = "Access Invited Collecttion Link"
 cwd = os.getcwd()
@@ -26,51 +20,6 @@ network_ref = "https://themartec.atlassian.net/wiki/spaces/AQ/pages/92045436/Net
 # Mbps -> byte/s
 network_conditions = {
     'Network As Default Setting': {
-    },
-    'US Avg Fixed Broadband Network Speed': {
-        'download': (237.41 * 125000),
-        'upload': (28.55 * 125000),
-        'latency': 13,
-    },
-    'US Avg Mobile Network Speed': {
-        'download': (115.40 * 125000),
-        'upload': (9.85 * 125000),
-        'latency': 29,
-    },
-    'UK Avg Fixed Broadband Network Speed': {
-        'download': (95.95 * 125000),
-        'upload': (26.17 * 125000),
-        'latency': 13,
-    },
-    'UK Avg Mobile Network Speed': {
-        'download': (52.33 * 125000),
-        'upload': (7.51 * 125000),
-        'latency': 34,
-    },
-    'AU Avg Fixed Broadband Network Speed': {
-        'download': (54.69 * 125000),
-        'upload': (18.39 * 125000),
-        'latency': 11,
-    },
-    'AU Avg Mobile Network Speed': {
-        'download': (82.88 * 125000),
-        'upload': (8.53 * 125000),
-        'latency': 22,
-    },
-    'VN Avg Fixed Broadband Network Speed': {
-        'download': (47.23 * 125000),
-        'upload': (19.67 * 125000),
-        'latency': 23,
-    },
-    'VN Avg Mobile Network Speed': {
-        'download': (108.22 * 125000),
-        'upload': (101.07 * 125000),
-        'latency': 3,
-    },
-    'Fast 3G Network Speed': {
-        'download': 180000,  # 1440 Kbps
-        'upload': 84375,  # 675 Kbps
-        'latency': 150,  # 150 ms
     }
 }
 
@@ -97,7 +46,6 @@ def write_data(filename, data_row):
 
 
 def calculate_avg_speed(file_name, env_name):
-
     with open(os.getenv("SPEED_PERFORMANCE_FILE"), 'w') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(["Test Env", "Time", "Network Config", "Average Upload Speed"])
@@ -142,6 +90,12 @@ def test_nanl_upload_video_under_network_conditions(get_env, set_up_tear_down_wi
                                                     ):
     logger.info(f"network_condition: {network_condition}")
     logger.info(f"Details:\n{network_conditions[network_condition]}")
+    FILE_NAME_01 = "upload_history.csv"
+    FILE_NAME_02 = "avg_speed.csv"
+    remove_file(FILE_NAME_01)
+    remove_file(FILE_NAME_02)
+    init_csv_file_with_column(["Time", "Network Config", "Upload Speed"], "upload_history.csv")
+
     with allure.step(f"Start browser with configure of {network_condition}"):
         context = set_up_tear_down_with_network_profile
         page = init_network_config(context, network_condition)
@@ -166,5 +120,5 @@ def test_nanl_upload_video_under_network_conditions(get_env, set_up_tear_down_wi
         calculate_avg_speed("upload_history.csv", get_env)
 
     with allure.step("Validate Uploaded Time Should Be Less Than 120 seconds"):
-        logger.info(f"Upload Time: {upload_time} (-1 means it took more than 2 minutes)")
+        print(f"Upload Time: {upload_time} (-1 means it took more than 2 minutes)")
         assert -1 < upload_time < 61

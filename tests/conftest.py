@@ -134,7 +134,7 @@ def set_up_tear_down_with_network_profile(playwright: Playwright, request) -> Br
     load_dotenv()
     browser_type = os.getenv('browser_type')
     logger.info(f"    - browser_type: {browser_type}")
-    browser = playwright.chromium.launch(headless=True, slow_mo=500, channel='chrome')
+    browser = playwright.chromium.launch(headless=False, slow_mo=500, channel='chrome')
     context = browser.new_context()
 
     yield context

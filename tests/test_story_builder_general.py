@@ -1,10 +1,6 @@
 import allure
 import os
-import sys
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent.replace('regression-test', ''))
 from common_src.pages.story_builder import StoryBuilderPage
 from common_src.pages.main_employer import MainEmployerPage
 

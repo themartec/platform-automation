@@ -1,4 +1,5 @@
 import os
+import time
 
 from playwright.sync_api import expect
 
@@ -61,3 +62,11 @@ class LibraryPage:
         else:
             print(f"File is NOT existed.")
             return False
+
+    def search_for_story(self, story_name):
+        self.page.get_by_placeholder("Search for headline or topic").click()
+        self.page.get_by_placeholder("Search for headline or topic").fill(story_name)
+        self.page.get_by_placeholder("Search for headline or topic").press("Enter")
+        time.sleep(3)
+
+
