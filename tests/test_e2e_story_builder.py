@@ -84,7 +84,7 @@ def test_2e2_flow_01(set_up_tear_down, init_context):
 
         with allure.step("Validate user is able to view 'Register' page"):
             register_page = RegisterPage(page02)
-            register_page.check_register_page_shown()
+            register_page.check_register_page_shown('advocate')
     with allure.step("C2575 - Non-SSO - Copy Story magic link is worked as expected"):
         email = f"test.dummy{random_num}@themartec.com"
 

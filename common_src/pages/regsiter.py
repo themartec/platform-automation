@@ -10,13 +10,16 @@ class RegisterPage:
     def __init__(self, page):
         self.page = page
 
+    def enter_password(self, password: str):
+        self.page.locator("#password").click()
+        self.page.locator("#password").fill(password)
+        self.page.locator("*:is(#repeatPassword, #confirmPassword)").click()
+        self.page.locator("*:is(#repeatPassword, #confirmPassword)").fill(password)
+
     def enter_register_data(self, email: str, password: str):
         self.page.get_by_placeholder("Your Email").click()
         self.page.get_by_placeholder("Your Email").fill(email)
-        self.page.locator("#password").click()
-        self.page.locator("#password").fill(password)
-        self.page.locator("#repeatPassword").click()
-        self.page.locator("#repeatPassword").fill(password)
+        self.enter_password(password)
 
     def check_on_agreement_checkbox(self):
         self.page.locator("div").filter(
@@ -37,6 +40,13 @@ class RegisterPage:
         self.page.locator("div").filter(has_text=re.compile(r"^Select$")).nth(3).click()
         self.page.get_by_text(language, exact=True).click()
         Screenshot(self.page).take_screenshot()
+
+    def enter_profile_data_for_team_invite_flow(self, first_name, last_name,):
+        self.page.locator("*:is(#firstName, #firstname)").click()
+        self.page.locator("*:is(#firstName, #firstname)").fill(first_name)
+        self.page.locator("*:is(#lastName, #lastname)").fill(last_name)
+        Screenshot(self.page).take_screenshot()
+
 
     def upload_profile_image(self, file_name):
         with self.page.expect_file_chooser() as fc_info:
@@ -74,14 +84,22 @@ class RegisterPage:
         expect(self.page.get_by_role("img", name="Photo Preview")).to_be_visible()
         expect(self.page.get_by_role("button").first).to_be_visible()
 
-    def check_register_page_shown(self):
+    def check_register_page_shown(self, role_type):
+        Screenshot(self.page).take_screenshot()
         xpath = "//p[.='EMAIL']"
         expect(self.page.locator(xpath)).to_be_visible()
         register_url = self.page.evaluate('() => document.URL')
-        assert 'advocate/register' in register_url
-        expect(self.page.locator("//p[.='CREATE PASSWORD']/following-sibling::div/input")).to_be_visible()
+        if 'advocate' in role_type.lower():
+            assert 'advocate/register' in register_url
+            expect(self.page.locator("//p[.='CREATE PASSWORD']/following-sibling::div/input")).to_be_visible()
+            expect(self.page.locator("//p[contains(.,'I have read and agreed with the')]")).to_be_visible()
+        elif 'employer' in role_type.lower() or 'recruiter' in role_type.lower():
+            assert 'employer/register' in register_url
+            expect(self.page.locator("//p[.='CREATE A PASSWORD']/following-sibling::div/input")).to_be_visible()
+        else:
+            raise Exception(f"Un-support role type as {role_type}")
+
         expect(self.page.locator("//p[.='REPEAT PASSWORD']/following-sibling::div/input")).to_be_visible()
-        expect(self.page.locator("//p[contains(.,'I have read and agreed with the')]")).to_be_visible()
         expect(self.page.locator("//p[.='Sign Up']")).to_be_visible()
 
     def check_error_email_taken(self):
@@ -95,4 +113,13 @@ class RegisterPage:
 
     def check_expired_error_message(self):
         expect(self.page.locator("//p[.='Invitation expired']")).to_be_visible(timeout=20000)
+        Screenshot(self.page).take_screenshot()
+
+    def check_email_and_company_name(self, email_address, company_name):
+        expect(self.page.locator(f"//*[@value='{email_address}']")).to_be_visible()
+        expect(self.page.locator(f"//*[@value='{company_name}']")).to_be_visible()
+
+    def click_on_complete_registration(self):
+        self.page.locator("//button[.='Complete Registration']").click()
+        time.sleep(5)
         Screenshot(self.page).take_screenshot()

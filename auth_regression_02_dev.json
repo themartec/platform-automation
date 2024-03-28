@@ -1,0 +1,81 @@
+{
+  "cookies": [
+    {
+      "name": "ajs_anonymous_id",
+      "value": "c0aeaecd-f1ca-4c12-9bfd-4ca123b33fe8",
+      "domain": ".themartec.com",
+      "path": "/",
+      "expires": 1743151210,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ajs_user_id",
+      "value": "e993ce7c",
+      "domain": ".themartec.com",
+      "path": "/",
+      "expires": 1743151210,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__cf_bm",
+      "value": "FlL5Dd5EzJqr8w5Lc8rvuoZfkrMWH92j2wJcfkoVAKY-1711615212-1.0.1.1-J6zspzy5pglMuvobV96proDfTXSzykar3BhVMxHFY6E4NAfJbgxsp92BeQ1XHGSGj0G1fc2eZFDH8K0Z1eRhTg",
+      "domain": ".pexels.com",
+      "path": "/",
+      "expires": 1711617012.610535,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://appdev.themartec.com",
+      "localStorage": [
+        {
+          "name": "hideDownloadAppNotice",
+          "value": ""
+        },
+        {
+          "name": "_pendo_visitorId.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1720255210799,\"value\":\"automation.employer02@themartec.com\"}"
+        },
+        {
+          "name": "_pendo_accountId.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1720255210799,\"value\":\"The Martec\"}"
+        },
+        {
+          "name": "ajs_user_id",
+          "value": "\"e993ce7c\""
+        },
+        {
+          "name": "persist:root",
+          "value": "{\"auth\":\"{\\\"token\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IllYVjBiMjFoZEdsdmJpNWxiWEJzYjNsbGNqQXlRSFJvWlcxaGNuUmxZeTVqYjIwPSIsImF1dGhfaWQiOiJlOTkzY2U3Yy02OGQxLTRkMDgtYmNiMi1iZjZiOTlkMTE3ZmQiLCJjb21wYW55X2lkIjoiY2FmZGEyNDUtODA1My00ZjU4LThjYTQtNjVkMGRkZGJhNzI2IiwiY29tcGFueV9uYW1lIjoiVGhlIE1hcnRlYyIsImF1ZCI6IkJyb3dzZXIiLCJjcmVhdGVkX2F0IjoiMjAyNC0wMy0wOFQwOTowNDo1NS40ODNaIiwicGxhdGZvcm0iOiJFTVBMT1lFUiIsImlhdCI6MTcxMTYxNTIxMCwiZXhwIjoxNzExNzAxNjEwfQ.YyYxZW3LCJKbTZ4VLES8WVM3ryxKzAD4jcEmoLM1Do8\\\",\\\"platform\\\":\\\"EMPLOYER\\\",\\\"refresh_token\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF1dG9tYXRpb24uZW1wbG95ZXIwMkB0aGVtYXJ0ZWMuY29tIiwiY3JlYXRlZF9hdCI6IjIwMjQtMDMtMDhUMDk6MDQ6NTUuNDgzWiIsInBsYXRmb3JtIjoiRU1QTE9ZRVIiLCJjb21wYW55X2lkIjoiY2FmZGEyNDUtODA1My00ZjU4LThjYTQtNjVkMGRkZGJhNzI2IiwiaWF0IjoxNzExNjE1MjEwLCJleHAiOjE3MTQyMDcyMTB9.2a3yL3k4XjoAiZspFcYCdj7wh0FQGUYaX6k6eOYt8pU\\\",\\\"system_message\\\":\\\"\\\",\\\"permissionRouter\\\":[\\\"employer/notifications\\\",\\\"employer/content-recipe\\\",\\\"employer/dashboard\\\",\\\"employer/content-calendar\\\",\\\"employer/inside-look\\\",\\\"employer/purchase\\\",\\\"employer/audience-research\\\",\\\"employer/employee-hub\\\",\\\"employer/story-builder\\\",\\\"employer/creative-studio\\\",\\\"employer/story-editor\\\",\\\"employer/showcase\\\",\\\"employer/library\\\",\\\"employer/analytics\\\",\\\"employer/brand-guidelines\\\",\\\"employer/widget\\\",\\\"employer/jobs\\\",\\\"employer/settings\\\",\\\"employer/register\\\",\\\"employer/forgot-password\\\",\\\"employer/login\\\",\\\"employer/sso\\\"],\\\"email\\\":\\\"automation.employer02@themartec.com\\\"}\",\"pageName\":\"{\\\"page_name\\\":null}\",\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}"
+        },
+        {
+          "name": "_pendo_meta.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1720255210800,\"value\":4277822887}"
+        },
+        {
+          "name": "ajs_user_traits",
+          "value": "{\"name\":\"Automation QA 02\",\"email\":\"automation.employer02@themartec.com\",\"session\":\"EB\",\"company\":\"The Martec\"}"
+        },
+        {
+          "name": "i18nextLng",
+          "value": "en"
+        },
+        {
+          "name": "_pendo_guides_blocked.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1711629611111,\"value\":\"0\"}"
+        },
+        {
+          "name": "ajs_anonymous_id",
+          "value": "\"c0aeaecd-f1ca-4c12-9bfd-4ca123b33fe8\""
+        }
+      ]
+    }
+  ]
+}

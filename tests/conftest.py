@@ -112,6 +112,27 @@ def set_up_tear_down_with_full_configure(playwright: Playwright, request) -> Non
 
 
 @pytest.fixture(scope="function")
+def init_page_with_full_configure_profile_02(playwright: Playwright, request) -> None:
+    env_name = get_env_from_command(request)
+    browser = common_browser_setup(playwright)
+    context = browser.new_context(storage_state=f"auth_regression_02_{env_name}.json")
+    context.grant_permissions(['clipboard-read', 'clipboard-write'])
+    page = context.new_page()
+    # listen for network event
+    page.on("request", lambda request: None)
+    page.on("response", lambda response: None)
+    page.goto(init_url('APP_MARTEC_URL'))
+    time.sleep(5)
+    yield page
+
+    def teardown():
+        print("Tear down is called !")
+        browser.close()
+
+    request.addfinalizer(teardown)
+
+
+@pytest.fixture(scope="function")
 def set_up_tear_down_without_state(playwright: Playwright, request) -> None:
     load_dotenv()
     browser = common_browser_setup(playwright)
