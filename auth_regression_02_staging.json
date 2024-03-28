@@ -1,0 +1,81 @@
+{
+  "cookies": [
+    {
+      "name": "ajs_anonymous_id",
+      "value": "b9b58a41-8986-4928-833d-485450e6e7d5",
+      "domain": ".themartec.com",
+      "path": "/",
+      "expires": 1743148146,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ajs_user_id",
+      "value": "fde645bf",
+      "domain": ".themartec.com",
+      "path": "/",
+      "expires": 1743148146,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__cf_bm",
+      "value": "0OPfmws5vl3pdu1mZH8hNmsOPePjVxoaiq_17PxKRsw-1711612148-1.0.1.1-RHl4Z1PMu.p3lXUuohaMz.fmBPMAMAHbpObHnSKVA2VMy2tng6G4RgP5wPQUidRss8Wux0oL4DCtPVTBr6o5LQ",
+      "domain": ".pexels.com",
+      "path": "/",
+      "expires": 1711613948.919231,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://appstaging.themartec.com",
+      "localStorage": [
+        {
+          "name": "hideDownloadAppNotice",
+          "value": ""
+        },
+        {
+          "name": "_pendo_visitorId.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1720252146851,\"value\":\"automation.employer02@themartec.com\"}"
+        },
+        {
+          "name": "_pendo_accountId.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1720252146851,\"value\":\"Dummy Auto 01\"}"
+        },
+        {
+          "name": "ajs_user_id",
+          "value": "\"fde645bf\""
+        },
+        {
+          "name": "persist:root",
+          "value": "{\"auth\":\"{\\\"token\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IllYVjBiMjFoZEdsdmJpNWxiWEJzYjNsbGNqQXlRSFJvWlcxaGNuUmxZeTVqYjIwPSIsImF1dGhfaWQiOiJmZGU2NDViZi0wOTZkLTRjNjgtYWZlNS0zZWU3YjQxMTY3NmEiLCJjb21wYW55X2lkIjoiYmRjNDc5NTktYmU4ZS00NzBlLTkzY2MtMWY2ZGY5ZWI0ZGJjIiwiY29tcGFueV9uYW1lIjoiRHVtbXkgQXV0byAwMSIsImF1ZCI6IkJyb3dzZXIiLCJjcmVhdGVkX2F0IjoiMjAyNC0wMy0wOFQwOTowMzo1Ny4wOThaIiwicGxhdGZvcm0iOiJFTVBMT1lFUiIsImlhdCI6MTcxMTYxMjE0NiwiZXhwIjoxNzExNjk4NTQ2fQ.MdGYNzcdSCzFs4L30pZEPlK7hGUB8pz_FMHjKtGsuag\\\",\\\"platform\\\":\\\"EMPLOYER\\\",\\\"refresh_token\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF1dG9tYXRpb24uZW1wbG95ZXIwMkB0aGVtYXJ0ZWMuY29tIiwiY3JlYXRlZF9hdCI6IjIwMjQtMDMtMDhUMDk6MDM6NTcuMDk4WiIsInBsYXRmb3JtIjoiRU1QTE9ZRVIiLCJjb21wYW55X2lkIjoiYmRjNDc5NTktYmU4ZS00NzBlLTkzY2MtMWY2ZGY5ZWI0ZGJjIiwiaWF0IjoxNzExNjEyMTQ2LCJleHAiOjE3MTQyMDQxNDZ9.-_VwUDArfUhiVMftOTh3Wmc23i3ye6cKSRSuQaUY8zY\\\",\\\"system_message\\\":\\\"\\\",\\\"permissionRouter\\\":[\\\"employer/notifications\\\",\\\"employer/content-recipe\\\",\\\"employer/dashboard\\\",\\\"employer/content-calendar\\\",\\\"employer/inside-look\\\",\\\"employer/purchase\\\",\\\"employer/audience-research\\\",\\\"employer/employee-hub\\\",\\\"employer/story-builder\\\",\\\"employer/creative-studio\\\",\\\"employer/story-editor\\\",\\\"employer/showcase\\\",\\\"employer/library\\\",\\\"employer/analytics\\\",\\\"employer/brand-guidelines\\\",\\\"employer/widget\\\",\\\"employer/jobs\\\",\\\"employer/settings\\\",\\\"employer/register\\\",\\\"employer/forgot-password\\\",\\\"employer/login\\\",\\\"employer/sso\\\"],\\\"email\\\":\\\"automation.employer02@themartec.com\\\"}\",\"pageName\":\"{\\\"page_name\\\":null}\",\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}"
+        },
+        {
+          "name": "_pendo_meta.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1720252146852,\"value\":2106868739}"
+        },
+        {
+          "name": "ajs_user_traits",
+          "value": "{\"name\":\"Automation QA 02\",\"email\":\"automation.employer02@themartec.com\",\"session\":\"EB\",\"company\":\"Dummy Auto 01\"}"
+        },
+        {
+          "name": "i18nextLng",
+          "value": "en"
+        },
+        {
+          "name": "_pendo_guides_blocked.f7059bfd-96dd-4775-7a87-3fb9d9ee4c1e",
+          "value": "{\"ttl\":1711626547325,\"value\":\"0\"}"
+        },
+        {
+          "name": "ajs_anonymous_id",
+          "value": "\"b9b58a41-8986-4928-833d-485450e6e7d5\""
+        }
+      ]
+    }
+  ]
+}

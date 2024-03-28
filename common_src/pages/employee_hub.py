@@ -63,6 +63,9 @@ class EmployeeHubPage:
     def click_on_direct_invite_option(self):
         self.page.get_by_text("Direct InviteOutreach people").click()
 
+    def click_on_activate_people_option(self, option_name):
+        self.page.get_by_text(option_name).click()
+
     def click_on_adv_name_in_list(self, adv_name):
         self.page.get_by_text(adv_name).click()
 
@@ -225,7 +228,7 @@ class EmployeeHubPage:
         (expect(self.page.get_by_label("Rich Text Editor, main"))
          .to_contain_text(body))
 
-    def update_template_with_content(self, old_content, new_content):
+    def update_template_with_content(self, new_content):
         self.page.get_by_label("Rich Text Editor, main").fill(
             f"{new_content}")
         Screenshot(self.page).take_screenshot()
@@ -281,3 +284,19 @@ class EmployeeHubPage:
         expect(self.page.locator("div").filter(has_text=re.compile(fr"^{search_content}$"))).to_be_visible()
         expect(self.page.locator("#modal").get_by_text(filter_section)).to_be_visible()
         expect(self.page.get_by_text(search_content).nth(1)).to_be_visible()
+
+    def check_template_is_saved(self, template_name):
+        expect(self.page.get_by_text("Your template has been")).to_be_visible()
+        expect(self.page.get_by_text(template_name)).to_be_visible()
+
+    def create_own_template(self):
+        self.page.locator("div").filter(has_text=re.compile(r"^Create Own Template$")).get_by_role(
+            "img").nth(1).click()
+
+    def check_copy_message_work(self, clipboard_content, marked_text):
+        current_content = self.page.get_by_label("Rich Text Editor, main").text_content()
+        intersection = current_content.replace(clipboard_content, "")
+        assert marked_text in intersection
+
+
+

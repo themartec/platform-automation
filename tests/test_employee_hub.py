@@ -4,6 +4,9 @@ from datetime import date, timedelta
 import allure
 import os
 
+import pytest
+
+from actions.common_action import check_text_is_shown_on_screen, click_on_button_name
 from common_src.pages.main_employer import MainEmployerPage
 from common_src.pages.employee_hub import EmployeeHubPage
 from common_src.pages.settings import SettingsPage
@@ -70,7 +73,7 @@ def test_add_new_advocate_template(set_up_tear_down, init_a_page_with_base_url):
             employee_page.check_body_email_template(body)
     with allure.step("[C2581] Validate A New Template Can Be Created From Direct Invite View"):
         with allure.step("Update Current Template & Check Its Affection To Current View"):
-            employee_page.update_template_with_content(body, number_part + " This is new update from Automation - " +
+            employee_page.update_template_with_content(number_part + " This is new update from Automation - " +
                                                        body)
             employee_page.click_on_save_template_button()
             time.sleep(20)
@@ -236,7 +239,7 @@ def test_account_action_bench(set_up_tear_down, init_a_page_with_base_url):
 @allure.title("[C2680] Direct Invite - Resend Invite & Check For Expired, Renewed Token Event")
 @allure.description(f"")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2680")
-@allure.tag("db_required", "network_listener")
+@allure.tag("db_required", "network_listener", "user_invitation")
 def test_account_direct_invite(set_up_tear_down_with_full_configure, init_context):
     page = set_up_tear_down_with_full_configure
     with allure.step("Access Employee Hub"):
@@ -261,7 +264,7 @@ def test_account_direct_invite(set_up_tear_down_with_full_configure, init_contex
             register_page_02.check_default_user_info_are_shown(email_address,
                                                                'The Martec')
         with allure.step("UI elements are shown completely"):
-            register_page_02.check_register_page_shown()
+            register_page_02.check_register_page_shown('advocate')
     with allure.step("Set up for expired event of invitation link"):
         conn = MartecDatabase()
         today_date = date.today()
@@ -284,3 +287,88 @@ def test_account_direct_invite(set_up_tear_down_with_full_configure, init_contex
         register_page_02 = RegisterPage(page02)
         register_page_02.check_default_user_info_are_shown(email_address,
                                                            'The Martec')
+
+
+@allure.title("[C2584][1a] Communication Channel - Save message is worked")
+@allure.description(f"Review or update message")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2584")
+# @allure.tag("db_required", "network_listener")
+def test_save_message_communicate_channel_update(set_up_tear_down, init_context):
+    page = set_up_tear_down
+    option_name = "Communication Channel"
+    with allure.step("Access Employee Hub"):
+        MainEmployerPage(page).access_employee_hub()
+        employee_page = EmployeeHubPage(page)
+    with allure.step(f"Access {option_name} page"):
+        employee_page.click_on_active_people_button()
+        employee_page.click_on_activate_people_option(option_name)
+    with allure.step("Review and update message template"):
+        check_text_is_shown_on_screen(page, option_name)
+        template_content = ("Hi [advocateName], I am delighted to be able to invite you to be a brand ambassador for ["
+                            "companyName] in an exciting new initiative we are embarking on to build awareness and "
+                            "interest in working at [companyName].")
+
+        template_name = f"Communication {get_random_string()}"
+        employee_page.update_template_with_content(template_content)
+        employee_page.click_on_save_template_button()
+        employee_page.enter_new_template_name(template_name)
+    with allure.step("Validate message is saved in Settings & shown on current channel in selection box"):
+        with allure.step("Template is shown as default in selection box in channel view"):
+            employee_page.check_template_is_saved(template_name)
+        with allure.step("Validate Newly Update Template In Settings"):
+            main_page = MainEmployerPage(page)
+            main_page.access_settings()
+            setting_page = SettingsPage(page)
+            setting_page.click_on_option("Message Templates")
+            setting_page.check_template_shown_on_invite_advocate(template_name)
+        with allure.step("Remove template"):
+            setting_page.set_template_as_default("Invite Advocates - Specific Campaign")
+            setting_page.delete_invite_adv(template_name)
+
+
+@allure.title("[C2584,C2585][1b] Communication Channel - Save message, Copy Message is worked")
+@allure.description(f"Create New Own Template, Copy Message")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2584")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2585")
+# @allure.tag("db_required", "network_listener")
+def test_save_message_communicate_channel_new(set_up_tear_down, init_context):
+    page = set_up_tear_down
+    option_name = "Communication Channel"
+    with allure.step("Access Employee Hub"):
+        MainEmployerPage(page).access_employee_hub()
+        employee_page = EmployeeHubPage(page)
+    with allure.step(f"Access {option_name} page"):
+        employee_page.click_on_active_people_button()
+        employee_page.click_on_activate_people_option(option_name)
+    with allure.step("Copy message from current template"):
+        clipboard_content = click_on_button_name(page, "Copy message")
+        print(f"Copy Message Content: {clipboard_content}")
+    with allure.step("Create own template"):
+        template_content = f"{clipboard_content} (create own template test)"
+        template_name = f"Communication Own {get_random_string()}"
+        employee_page.create_own_template()
+        employee_page.update_template_with_content(template_content)
+        employee_page.check_copy_message_work(clipboard_content,
+                                              "(create own template test)")
+        employee_page.click_on_save_template_button()
+        employee_page.enter_new_template_name(template_name)
+    with allure.step("Validate message is saved in Settings & shown on current channel in selection box"):
+        with allure.step("Template is shown as default in selection box in channel view"):
+            employee_page.check_template_is_saved(template_name)
+        with allure.step("Validate Newly Update Template In Settings"):
+            main_page = MainEmployerPage(page)
+            main_page.access_settings()
+            setting_page = SettingsPage(page)
+            setting_page.click_on_option("Message Templates")
+            setting_page.check_template_shown_on_invite_advocate(template_name)
+        with allure.step("Remove template"):
+            setting_page.set_template_as_default("Invite Advocates - Specific Campaign")
+            setting_page.delete_invite_adv(template_name)
+
+
+@allure.title("[C2588] CSV upload is worked")
+@allure.description(f"")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2588")
+@pytest.mark.skip(reason="Feature is being issued")
+def test_bulk_upload(set_up_tear_down, init_context):
+    pass
