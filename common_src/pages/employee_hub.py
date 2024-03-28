@@ -73,18 +73,15 @@ class EmployeeHubPage:
         base_xpath = (f"(//div[contains(@class,'infinite-scroll-component')]/div[@role='row']"
                       f"//p[.='{status}'])[{order}]/parent::div/parent::div")
         logger.info(f"[Debug] base_xpath: {base_xpath}")
-        time.sleep(30)
         if self.page.locator(base_xpath).count() > 0:
             adv_name_xpath = f"{base_xpath}//div[contains(.,'{prefix_name}')]"
             three_dot_xpath = f"{base_xpath}/div[last()]//button[contains(@class,'ellipsis-button')]"
             button_xpath = f"{base_xpath}/div[last()]//button[.='{button_type}']"
-            time.sleep(5)
             adv_full_name = self.page.locator(adv_name_xpath).nth(1).text_content()
             logger.info(f"[Debug] button_xpath: {button_xpath}")
             logger.info(f"[Debug] three_dot_xpath: {three_dot_xpath}")
             self.page.locator(three_dot_xpath).hover()
             self.page.locator(button_xpath).click()
-            time.sleep(10)
             if 'delete' in button_type.lower():
                 self.page.get_by_role("button", name="OK").click()
             return adv_full_name
@@ -237,8 +234,8 @@ class EmployeeHubPage:
         expect(self.page.get_by_text(name)).to_be_visible()
 
     def check_adv_name_with_status_visible_in_list(self, status, adv_full_name):
-        expect(self.page.locator(f"//p[.='{status}']")).to_be_visible(timeout=60000)
         Screenshot(self.page).take_screenshot()
+        expect(self.page.locator(f"//p[.='{status}']")).to_be_visible(timeout=60000)
         expect(self.page.get_by_text(adv_full_name)).to_be_visible()
 
     def filter_single_by_status(self, status):
@@ -298,5 +295,43 @@ class EmployeeHubPage:
         intersection = current_content.replace(clipboard_content, "")
         assert marked_text in intersection
 
+    def download_template_from_bulk_upload(self, file_name):
+        with self.page.expect_download(timeout=0) as download_info:
+            self.page.get_by_role("button", name="Download Template").click()
+        download = download_info.value
+        download.save_as(file_name)
+        time.sleep(5)
+        return file_name
 
+    def upload_a_template_file_for_bulk_upload(self, file_name):
+        with self.page.expect_file_chooser() as fc_info:
+            self.page.locator("div").filter(has_text=re.compile(r"^Drag or Click to upload a file$")).nth(2).click()
+        file_chooser = fc_info.value
+        file_chooser.set_files(file_name)
+        time.sleep(5)
 
+    def check_bulk_upload(self):
+        expect(self.page.locator("div").filter(has_text=re.compile(r"^email$"))).to_be_visible()
+        expect(self.page.locator("div").filter(has_text=re.compile(r"^first_name$"))).to_be_visible()
+        expect(self.page.locator("div").filter(has_text=re.compile(r"^last_name$"))).to_be_visible()
+        expect(self.page.locator("div").filter(has_text=re.compile(r"^department$"))).to_be_visible()
+
+    def select_email_column_in_bulk_upload(self):
+        self.page.locator("div").filter(has_text=re.compile(r"^email$")).locator("span").click()
+
+    def select_all_email_address_in_bulk_upload(self):
+        self.page.locator("//p[.='Select All']/preceding-sibling::span").click()
+
+    def checkbox_email_address_as_action(self, email_address, action_type):
+        self.page.locator(f"//p[.='{email_address}']/preceding-sibling::span").click()
+        self.page.get_by_role("button", name=action_type).click()
+        Screenshot(self.page).take_screenshot()
+        time.sleep(5)
+
+    def uncheck_email_address(self, email_address):
+        if self.page.locator(f"//p[.='{email_address}']/preceding-sibling::input").is_checked():
+            self.page.locator(f"//p[.='{email_address}']/preceding-sibling::span").click()
+
+    def click_on_back_button_from_screen_name(self, screen_name):
+        (self.page.locator("div").filter(has_text=re.compile(fr"^{screen_name}$"))
+         .get_by_role("button").click())

@@ -6,7 +6,8 @@ import os
 
 import pytest
 
-from actions.common_action import check_text_is_shown_on_screen, click_on_button_name
+from common_src.actions.common_action import check_text_is_shown_on_screen, click_on_button_name, \
+    check_file_is_downloaded_successfully, remove_file_name, check_button_name_is_disable
 from common_src.pages.main_employer import MainEmployerPage
 from common_src.pages.employee_hub import EmployeeHubPage
 from common_src.pages.settings import SettingsPage
@@ -369,6 +370,97 @@ def test_save_message_communicate_channel_new(set_up_tear_down, init_context):
 @allure.title("[C2588] CSV upload is worked")
 @allure.description(f"")
 @allure.testcase(f"{os.getenv('TESTRAIL_URL')}2588")
-@pytest.mark.skip(reason="Feature is being issued")
+# @pytest.mark.skip(reason="Feature is being issued")
 def test_bulk_upload(set_up_tear_down, init_context):
-    pass
+    page = set_up_tear_down
+    option_name = "Bulk Upload"
+    file_name = os.getcwd() + "/advocate-bulk-invite.csv"
+    print(f"file_name: {file_name}")
+    bench_user = 'john.doe@gmail.com'
+    invite_user = 'john.doe1@gmail.com'
+    with allure.step("[Precondition] Remove Existing File If Any"):
+        remove_file_name(file_name)
+    with allure.step("Access Employee Hub"):
+        main_page = MainEmployerPage(page)
+        main_page.access_employee_hub()
+        employee_page = EmployeeHubPage(page)
+    with allure.step(f"Access {option_name} page"):
+        employee_page.click_on_active_people_button()
+        employee_page.click_on_activate_people_option(option_name)
+    with allure.step(f"Validate Download Template is successful"):
+        downloaded_file = employee_page.download_template_from_bulk_upload(file_name)
+        is_download_ok = check_file_is_downloaded_successfully(downloaded_file)
+        assert is_download_ok is True
+    with allure.step("Upload a template .csv file"):
+        employee_page.upload_a_template_file_for_bulk_upload(file_name)
+        os.remove(file_name)
+    with allure.step("Validate Upload is successful"):
+        employee_page.check_bulk_upload()
+    with allure.step("Validate 'NEXT' button is disable"):
+        check_button_name_is_disable(page, "Next")
+    with allure.step("Select email column"):
+        employee_page.select_email_column_in_bulk_upload()
+        click_on_button_name(page, "Next")
+    with allure.step(f"Select email address '{bench_user}' to add to bench"):
+        employee_page.checkbox_email_address_as_action(bench_user,
+                                                       'Add to Bench')
+        employee_page.uncheck_email_address(bench_user)
+    with allure.step(f"Select email address '{invite_user}' to invite"):
+        employee_page.checkbox_email_address_as_action(invite_user,
+                                                       'Invite Selected')
+    with allure.step("Come back to employee hub table list"):
+        main_page.access_employee_hub()
+        employee_page.click_on_back_button_from_screen_name('Add in Bulk')
+        employee_page.click_on_back_button_from_screen_name('Activate People')
+    with allure.step(f"Search '{bench_user}' and Validate status as 'Bench'"):
+        employee_page.search_by_name(bench_user)
+        employee_page.check_adv_name_with_status_visible_in_list('bench', bench_user)
+    with allure.step(f"Search '{invite_user}' and Validate status as 'Invitation Sent'"):
+        employee_page.search_by_name(invite_user)
+        employee_page.check_adv_name_with_status_visible_in_list('invitation sent', invite_user)
+
+
+@allure.title("[C2681][1] Be able to bench an invited admin")
+@allure.description(f"")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2681")
+def test_bench_admin(init_page_with_full_configure_profile_02, init_context):
+    page = init_page_with_full_configure_profile_02
+    with allure.step("Access Employee Hub"):
+        MainEmployerPage(page).access_employee_hub()
+        employee_page = EmployeeHubPage(page)
+    with allure.step("Validate action to bench a invited admin"):
+        prefix_bench_adv_name = 'Dummy Admin'
+        with allure.step(f"Search {prefix_bench_adv_name}"):
+            employee_page.search_by_name(prefix_bench_adv_name)
+
+        with allure.step("Click on 'Bench' option to admin of status active"):
+            benched_adv_name = employee_page.perform_action_adv_with_info_and_return_name('Bench',
+                                                                                          prefix_bench_adv_name,
+                                                                                          'active',
+                                                                                          1)
+
+        with allure.step("Validate admin is now in bench status"):
+            employee_page.check_adv_name_with_status_visible_in_list('bench', benched_adv_name)
+
+
+@allure.title("[C2681][2] Be able to bench an invited recruiter ")
+@allure.description(f"")
+@allure.testcase(f"{os.getenv('TESTRAIL_URL')}2681")
+def test_bench_recruiter(init_page_with_full_configure_profile_02, init_context):
+    page = init_page_with_full_configure_profile_02
+    with allure.step("Access Employee Hub"):
+        MainEmployerPage(page).access_employee_hub()
+        employee_page = EmployeeHubPage(page)
+    with allure.step("Validate action to bench a invited recruiter"):
+        prefix_bench_adv_name = 'Dummy Recruiter'
+        with allure.step(f"Search {prefix_bench_adv_name}"):
+            employee_page.search_by_name(prefix_bench_adv_name)
+
+        with allure.step("Click on 'Bench' option to recruiter of status active"):
+            benched_adv_name = employee_page.perform_action_adv_with_info_and_return_name('Bench',
+                                                                                          prefix_bench_adv_name,
+                                                                                          'active',
+                                                                                          1)
+
+        with allure.step("Validate recruiter is now in bench status"):
+            employee_page.check_adv_name_with_status_visible_in_list('bench', benched_adv_name)
