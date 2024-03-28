@@ -66,7 +66,7 @@ def test_admin_direct_invite(init_page_with_full_configure_profile_02, init_cont
         time.sleep(5)
         setting_page.click_on_team_option()
         setting_page.click_on_option('Admin')
-        admin_name = f"Dummy Auto {random}"
+        admin_name = f"Dummy Admin {random}"
         setting_page.check_admin_tab_show_added_admin_info(email_address, admin_name)
     with allure.step("Open Employee Hub & Search for admin name"):
         main_page.access_employee_hub()
